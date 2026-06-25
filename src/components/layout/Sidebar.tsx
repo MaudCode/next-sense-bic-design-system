@@ -75,7 +75,7 @@ export function Sidebar() {
                         cn(
                           "flex items-center justify-between rounded-full px-3 py-1.5 font-sans text-[14px] transition-colors",
                           isActive
-                            ? "bg-secondary text-secondary-foreground font-medium"
+                            ? "bg-primary text-primary-foreground font-medium"
                             : "text-fg-2 font-normal hover:bg-[rgba(63,71,47,0.04)] hover:text-fg-1",
                         )
                       }
