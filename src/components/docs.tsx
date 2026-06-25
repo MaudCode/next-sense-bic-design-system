@@ -102,7 +102,7 @@ export function Swatch({
     >
       <div
         className="h-20 flex items-end justify-between p-3 border-b border-border"
-        style={{ background: hex, boxShadow: "inset 0 0 0 1px rgba(63,71,47,0.08)" }}
+        style={{ background: hex }}
       >
         <span
           className={cn(

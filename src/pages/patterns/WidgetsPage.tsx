@@ -1,5 +1,5 @@
 import { Layers, ChevronDown } from "lucide-react";
-import { EngineeringNote, PageHeader, Section } from "@/components/docs";
+import { PageHeader, Section } from "@/components/docs";
 import { Donut, ListLegend, BLUE, RED, YELLOW } from "@/components/chart-bits";
 
 type Band = { label: string; pct: string; value: number; color: string; muted?: boolean };
@@ -33,7 +33,7 @@ function Panel({ title, total, center, data }: { title: string; total: string; c
     <div className="flex flex-col items-center">
       <div className="font-formula text-[15px] font-medium text-fg-1 mb-3">{title}</div>
       <Donut slices={data} total={total} unit="%" centerLabel={center} size={150} />
-      <div className="w-full mt-3"><ListLegend items={li(data)} /></div>
+      <div className="mt-3 flex w-full justify-center"><ListLegend items={li(data)} /></div>
     </div>
   );
 }
@@ -73,14 +73,7 @@ export function WidgetsPage() {
         <div className="mt-4 rounded-xl border border-border bg-card p-5 shadow-[var(--shadow-xs)] text-[13px] leading-relaxed text-fg-2 space-y-1.5">
           <p><span className="text-fg-1 font-medium">One header, one scope.</span> The floor selector and period live once, at the top — they apply to all three charts.</p>
           <p><span className="text-fg-1 font-medium">Equal columns.</span> Each chart gets the same width and the same parts (donut + list legend), so the trio reads as one unit.</p>
-          <p><span className="text-fg-1 font-medium">List legend.</span> Donuts use the list legend (label left, % right) — not inline chips. 0% bands stay but dim.</p>
-        </div>
-        <div className="mt-4">
-          <EngineeringNote>
-            The comfort widget is one Card with three chart columns — not three separate widgets.
-            The scope (<span className="font-mono">All floors</span>) and period are shared in the
-            header and drive all three. Center % and legend stay Verdure.
-          </EngineeringNote>
+          <p><span className="text-fg-1 font-medium">List legend.</span> Donuts use the list legend (label left, % right, capped width so they read as a pair) — not inline chips. 0% bands stay but dim.</p>
         </div>
       </Section>
     </>

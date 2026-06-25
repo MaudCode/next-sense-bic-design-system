@@ -44,7 +44,7 @@ export function Legend({ items }: { items: { label: string; color: string }[] })
 /** List legend — dot + label, value right-aligned. The donut/comfort legend pattern. */
 export function ListLegend({ items }: { items: { label: string; color: string; value: string; muted?: boolean }[] }) {
   return (
-    <div className="w-full min-w-44">
+    <div className="w-[210px] max-w-full">
       {items.map((i) => (
         <div key={i.label} className={`flex items-center gap-2 py-1 text-[12px] ${i.muted ? "opacity-45" : ""}`}>
           <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: i.color }} />
