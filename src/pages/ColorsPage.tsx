@@ -369,26 +369,36 @@ export function ColorsPage() {
               {["Energy overview", "Comfort analysis", "Occupancy trends"].map((s) => (
                 <span
                   key={s}
-                  className="rounded-full border border-primary px-3 py-1 text-[12px] text-fg-1"
-                  style={{ background: "var(--assistant-accent)" }}
+                  className="rounded-full bg-secondary text-secondary-foreground px-3 py-1 text-[12px] transition-colors hover:bg-secondary/80"
                 >
                   {s}
                 </span>
               ))}
             </div>
-            <button className="self-end w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
-              <Send size={16} style={{ color: "var(--foreground)" }} />
+            <button className="self-end w-9 h-9 rounded-lg bg-primary text-primary-foreground flex items-center justify-center outline-none transition-colors hover:bg-primary/90 focus-visible:ring-[3px] focus-visible:ring-ring/50">
+              <Send size={16} />
             </button>
           </div>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
-          <Swatch name="Digital Sun" hex="#D9FF41" token="--brand-digital-sun" usage="Send button, pill borders (assistant --primary)" />
-          <Swatch name="Digital Sun 4AM" hex="#F5FDD3" token="--assistant-accent" usage="Header & footer strips" />
+          <Swatch name="Digital Sun" hex="#D9FF41" token="--brand-digital-sun" usage="Send button & user bubbles (assistant --primary)" />
+          <Swatch name="Halo" hex="#E5FB8C" token="--brand-halo" usage="Suggestion chips (assistant --secondary)" />
+          <Swatch name="Digital Sun 4AM" hex="#F5FDD3" token="--assistant-accent" usage="Header & footer strips; outline hover" />
         </div>
         <p className="text-[12px] text-fg-2 mt-3">
           The focus ring inside the chat is deliberately neutral grey, not Digital Sun
           — so the input doesn’t glow yellow on focus.
         </p>
+        <div className="mt-4">
+          <EngineeringNote>
+            Suggestion chips should be the <span className="font-mono">secondary</span>{" "}
+            filled pill (Halo <span className="font-mono">#E5FB8C</span>, borderless) — not
+            a green-bordered <span className="font-mono">outline</span>. And remember the
+            chat panel must remap <span className="font-mono">--secondary</span> /{" "}
+            <span className="font-mono">--accent</span> (see Button) or these fall back to
+            the base blue.
+          </EngineeringNote>
+        </div>
       </Section>
 
       <Section
