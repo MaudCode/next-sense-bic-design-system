@@ -20,7 +20,7 @@ export function ButtonPage() {
           <Button>Primary</Button>
           <Button variant="secondary">Secondary</Button>
           <Button variant="outline">Outline</Button>
-          <Button variant="accentOutline" className="rounded-full"><ArrowLeft /> Back</Button>
+          <Button variant="accentOutline"><ArrowLeft /> Back</Button>
           <Button variant="ghost">Ghost</Button>
           <Button variant="link">Link</Button>
           <Button variant="destructive">Delete</Button>
@@ -70,6 +70,11 @@ export function ButtonPage() {
                 "Back to…" button instead of the inline{" "}
                 <span className="font-mono">border-building-border</span> override — it
                 then re-tints to every context for free.
+              </li>
+              <li>
+                The "Back to…" button is currently a pill (<span className="font-mono">rounded-full</span>)
+                in BIC — it should use the <strong>regular button radius</strong> (md), like every
+                other button. Pills are for badges/tags only (see Radii).
               </li>
             </ul>
           </EngineeringNote>

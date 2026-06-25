@@ -1,4 +1,11 @@
-import { PageHeader, Section } from "@/components/docs";
+import { EngineeringNote, PageHeader, Section } from "@/components/docs";
+
+const PER_COMPONENT = [
+  { r: "md", use: "Buttons, inputs, selects, segmented toggles" },
+  { r: "lg", use: "Cards, panels, widgets (the base)" },
+  { r: "xl", use: "Dialogs, sheets, large surfaces" },
+  { r: "full", use: "Badges, tags, avatars — pills only" },
+];
 
 const RADII = [
   { name: "sm", token: "--radius-sm", px: 8, note: "calc(radius − 4px) · small controls" },
@@ -37,6 +44,32 @@ export function RadiiPage() {
               <span className="font-mono text-fg-1">{r.name}</span> — {r.note}
             </div>
           ))}
+        </div>
+      </Section>
+
+      <Section
+        title="Per component"
+        description="Which radius each component should use. The key rule: interactive controls (buttons, inputs) use md — pills (full) are reserved for badges and tags, not buttons."
+      >
+        <div className="rounded-xl border border-border bg-card divide-y divide-border shadow-[var(--shadow-xs)]">
+          {PER_COMPONENT.map((c) => (
+            <div key={c.r} className="flex items-center gap-4 px-5 py-3">
+              <span
+                className="w-16 h-9 shrink-0 bg-bg-3 border border-border"
+                style={{ borderRadius: c.r === "full" ? 9999 : c.r === "md" ? 10 : c.r === "lg" ? 12 : 16 }}
+              />
+              <span className="font-mono text-[12px] text-fg-1 w-12 shrink-0">{c.r}</span>
+              <span className="text-[13px] text-fg-2">{c.use}</span>
+            </div>
+          ))}
+        </div>
+        <div className="mt-4">
+          <EngineeringNote>
+            The building "Back to…" button is currently a pill
+            (<span className="font-mono">rounded-full</span>) in BIC — it should use the
+            regular button radius (<span className="font-mono">md</span>), like every other
+            button. Pills are for badges/tags only.
+          </EngineeringNote>
         </div>
       </Section>
     </>
