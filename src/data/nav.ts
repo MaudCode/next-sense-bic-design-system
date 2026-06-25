@@ -1,4 +1,4 @@
-import { BookOpen, Shapes, Component, type LucideIcon } from "lucide-react";
+import { BookOpen, Shapes, Component, PanelTop, type LucideIcon } from "lucide-react";
 
 export interface NavItem {
   title: string;
@@ -44,5 +44,10 @@ export const NAV: NavGroup[] = [
       { title: "Table", path: "/components/table", status: "ready" },
       { title: "Tabs", path: "/components/tabs", status: "ready" },
     ],
+  },
+  {
+    title: "Patterns",
+    icon: PanelTop,
+    items: [{ title: "Filter Bar", path: "/patterns/filter-bar", status: "ready" }],
   },
 ];

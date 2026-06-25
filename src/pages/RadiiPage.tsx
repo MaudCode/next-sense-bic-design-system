@@ -65,10 +65,11 @@ export function RadiiPage() {
         </div>
         <div className="mt-4">
           <EngineeringNote>
-            The building "Back to…" button is currently a pill
-            (<span className="font-mono">rounded-full</span>) in BIC — it should use the
-            regular button radius (<span className="font-mono">md</span>), like every other
-            button. Pills are for badges/tags only.
+            Two controls are over-rounded in BIC and should drop to the regular button
+            radius (<span className="font-mono">md</span>): the "Back to…" button and the
+            date / time-filter buttons in the top bar (24h · 7d · 30d · …), which are
+            currently pills. Pills (<span className="font-mono">full</span>) are for
+            badges/tags only.
           </EngineeringNote>
         </div>
       </Section>
