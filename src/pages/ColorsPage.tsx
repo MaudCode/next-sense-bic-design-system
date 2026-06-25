@@ -430,6 +430,24 @@ export function ColorsPage() {
             </ul>
           </EngineeringNote>
         </div>
+        <div className="mt-3">
+          <EngineeringNote>
+            <p className="mb-1.5">
+              <strong>Colored text is the bigger readability bug</strong> — confirmed in
+              product feedback (the occupancy <span className="font-mono">%</span> rendered in
+              Digital Sun is unreadable on white). The chart color is fine on lines/bars; it’s
+              the <em>numbers</em> that fail.
+            </p>
+            <p>
+              Rule: data labels &amp; numbers use <span className="font-mono">--fg-1</span>{" "}
+              (Verdure); the series color stays on lines / bars / dots / legend swatches. If a
+              number must carry the family color, use the <strong>dark</strong> end of the ramp
+              (step 4–5, ≥4.5:1) — never step 1–2. In code, replace{" "}
+              <span className="font-mono">color: var(--chart-*-1/2)</span> on label text with{" "}
+              <span className="font-mono">--fg-1</span> or a dark shade.
+            </p>
+          </EngineeringNote>
+        </div>
       </Section>
     </>
   );
