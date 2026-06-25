@@ -1,5 +1,6 @@
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { EngineeringNote, PageHeader, Section } from "@/components/docs";
+import { Donut, ListLegend } from "@/components/chart-bits";
 
 // New chart ramps (see Colors › Chart ramps)
 const BLUE = ["#D2E7F4", "#A1D3F0", "#74AFD0", "#4E86AE", "#305C7C"];
@@ -42,41 +43,20 @@ function Legend({ items }: { items: { label: string; color: string }[] }) {
   );
 }
 
-function Donut({ slices, total, unit, centerLabel = "Total" }: { slices: { label: string; value: number; color: string }[]; total: string; unit: string; centerLabel?: string }) {
-  const size = 168, rw = 28, R = size / 2, r = R - rw, cx = R, cy = R;
-  const sum = slices.reduce((s, x) => s + x.value, 0);
-  const GAP = 0.02;
-  let acc = -Math.PI / 2;
-  const arcs = slices.map((s) => {
-    const ang = (s.value / sum) * Math.PI * 2;
-    const a0 = acc + GAP / 2, a1 = acc + ang - GAP / 2;
-    acc += ang;
-    const large = a1 - a0 > Math.PI ? 1 : 0;
-    const p = (rad: number, ang2: number) => [cx + rad * Math.cos(ang2), cy + rad * Math.sin(ang2)];
-    const [x0, y0] = p(R, a0), [x1, y1] = p(R, a1), [xr0, yr0] = p(r, a1), [xr1, yr1] = p(r, a0);
-    return { d: `M${x0} ${y0} A${R} ${R} 0 ${large} 1 ${x1} ${y1} L${xr0} ${yr0} A${r} ${r} 0 ${large} 0 ${xr1} ${yr1} Z`, color: s.color };
-  });
-  return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      {arcs.map((a, i) => <path key={i} d={a.d} fill={a.color} />)}
-      <text x={cx} y={cy - 4} textAnchor="middle" fontSize="10" fill="#929083" fontFamily="var(--font-sans)">{centerLabel}</text>
-      <text x={cx} y={cy + 15} textAnchor="middle" fontSize="22" fontWeight="500" fill={INK} fontFamily="var(--font-formula)">
-        {total} <tspan fontSize="12" fill="#929083">{unit}</tspan>
-      </text>
-    </svg>
-  );
-}
+// Donut + ListLegend come from chart-bits (shared with the Widgets page).
 
 // ── page ─────────────────────────────────────────────────────────────────
 // Energy by Use — categories mapped to ramp steps exactly as analytics-charts.tsx does.
 const USE = [
-  { label: "Cooling 34%", value: 34, color: BLUE[0] },
-  { label: "Heating 22%", value: 22, color: RED[0] },
-  { label: "Ventilation 16%", value: 16, color: BLUE[2] },
-  { label: "Lighting 14%", value: 14, color: YELLOW[2] },
-  { label: "Electricity 10%", value: 10, color: YELLOW[0] },
-  { label: "Other 4%", value: 4, color: RED[3] },
+  { label: "Cooling", pct: "34%", value: 34, color: BLUE[0] },
+  { label: "Heating", pct: "22%", value: 22, color: RED[0] },
+  { label: "Ventilation", pct: "16%", value: 16, color: BLUE[2] },
+  { label: "Lighting", pct: "14%", value: 14, color: YELLOW[2] },
+  { label: "Electricity", pct: "10%", value: 10, color: YELLOW[0] },
+  { label: "Other", pct: "4%", value: 4, color: RED[3] },
 ];
+const legendItems = (rows: { label: string; pct: string; color: string }[]) =>
+  rows.map((r) => ({ label: r.label, color: r.color, value: r.pct }));
 
 // The real category → ramp-step map (from analytics-charts.tsx).
 const CATEGORY_MAP = {
@@ -110,10 +90,10 @@ const CATEGORICAL = [
 // Energy Sources — a categorical chart (sources are "just different"), so it uses the
 // Categorical palette: Electric vs Photovoltaic are now distinct, not both lime.
 const SOURCES = [
-  { label: "Electric 48%", value: 48, color: "#A1D3F0" },
-  { label: "Photovoltaic 34%", value: 34, color: "#829246" },
-  { label: "Gas 12%", value: 12, color: "#FF6847" },
-  { label: "District 6%", value: 6, color: "#7096AD" },
+  { label: "Electric", pct: "48%", value: 48, color: "#A1D3F0" },
+  { label: "Photovoltaic", pct: "34%", value: 34, color: "#829246" },
+  { label: "Gas", pct: "12%", value: 12, color: "#FF6847" },
+  { label: "District", pct: "6%", value: 6, color: "#7096AD" },
 ];
 
 // Bar with only the top corners rounded (radius-sm) — sits flat on the axis.
@@ -162,11 +142,11 @@ const SEVERITY = [
 
 // CO₂ comfort donut (from the live Comfort page)
 const CO2 = [
-  { label: "Optimal 39%", value: 39, color: YELLOW[1] },
-  { label: "Good 41%", value: 41, color: YELLOW[2] },
-  { label: "Fair 12%", value: 12, color: RED[0] },
-  { label: "Elevated 7%", value: 7, color: RED[1] },
-  { label: "High 1%", value: 1, color: RED[3] },
+  { label: "Optimal · <500 ppm", pct: "33%", value: 33, color: YELLOW[1] },
+  { label: "Good · 500–750", pct: "43%", value: 43, color: YELLOW[2] },
+  { label: "Fair · 750–900", pct: "14%", value: 14, color: RED[0] },
+  { label: "Elevated · 900–1200", pct: "9%", value: 9, color: RED[1] },
+  { label: "High · >1200", pct: "1%", value: 1, color: RED[3] },
 ];
 
 // Stacked bar — Energy by Use, a few weeks
@@ -269,13 +249,13 @@ export function ChartsPage() {
           <ChartCard title="Energy by Use" sub="By meaning — each category its family color">
             <div className="flex flex-wrap items-center gap-5">
               <Donut slices={USE} total="174" unit="MWh" />
-              <Legend items={USE} />
+              <ListLegend items={legendItems(USE)} />
             </div>
           </ChartCard>
           <ChartCard title="Energy Sources" sub="Categorical — distinct hues so sources don't blur">
             <div className="flex flex-wrap items-center gap-5">
               <Donut slices={SOURCES} total="159" unit="MWh" />
-              <Legend items={SOURCES} />
+              <ListLegend items={legendItems(SOURCES)} />
             </div>
           </ChartCard>
         </div>
@@ -284,8 +264,8 @@ export function ChartsPage() {
       <Section title="Comfort categories" description="The CO₂ / temperature / humidity donuts. Bands use the good→bad severity scale; the centre % and legend stay Verdure.">
         <ChartCard title="CO₂" sub="Share of time · business hours">
           <div className="flex flex-wrap items-center gap-6">
-            <Donut slices={CO2} total="39" unit="%" centerLabel="< 500 ppm" />
-            <Legend items={CO2} />
+            <Donut slices={CO2} total="33" unit="%" centerLabel="in < 500 ppm" />
+            <ListLegend items={legendItems(CO2)} />
           </div>
         </ChartCard>
       </Section>

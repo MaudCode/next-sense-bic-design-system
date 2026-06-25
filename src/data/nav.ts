@@ -50,6 +50,9 @@ export const NAV: NavGroup[] = [
   {
     title: "Patterns",
     icon: PanelTop,
-    items: [{ title: "Filter Bar", path: "/patterns/filter-bar", status: "ready" }],
+    items: [
+      { title: "Filter Bar", path: "/patterns/filter-bar", status: "ready" },
+      { title: "Widgets", path: "/patterns/widgets", status: "ready" },
+    ],
   },
 ];
