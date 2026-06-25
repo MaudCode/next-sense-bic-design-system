@@ -47,8 +47,8 @@ export function Sidebar() {
                 className={cn(
                   "w-full flex items-center gap-2.5 rounded-md px-2.5 py-2 transition-colors",
                   groupActive && !isOpen
-                    ? "bg-[rgba(63,71,47,0.04)]"
-                    : "hover:bg-[rgba(63,71,47,0.04)]",
+                    ? "bg-accent"
+                    : "hover:bg-accent",
                 )}
               >
                 <Icon size={17} className="text-fg-2 shrink-0" strokeWidth={1.8} />
@@ -76,7 +76,7 @@ export function Sidebar() {
                           "flex items-center justify-between rounded-full px-3 py-1.5 font-sans text-[14px] transition-colors",
                           isActive
                             ? "bg-primary text-primary-foreground font-medium"
-                            : "text-fg-2 font-normal hover:bg-[rgba(63,71,47,0.04)] hover:text-fg-1",
+                            : "text-fg-2 font-normal hover:bg-accent hover:text-accent-foreground",
                         )
                       }
                     >
