@@ -21,7 +21,7 @@ export function Sidebar() {
     setOpen((s) => ({ ...s, [title]: !s[title] }));
 
   return (
-    <aside className="hidden md:flex w-64 shrink-0 flex-col border-r border-border bg-[var(--brand-nimbus)] h-screen sticky top-0">
+    <aside className="level-general hidden md:flex w-64 shrink-0 flex-col border-r border-border bg-[var(--brand-nimbus)] h-screen sticky top-0">
       {/* Brand */}
       <div className="px-5 pt-5 pb-4">
         <img src="/assets/logo-full.svg" alt="Next Sense" className="h-5 w-auto" />
@@ -75,7 +75,7 @@ export function Sidebar() {
                         cn(
                           "flex items-center justify-between rounded-full px-3 py-1.5 font-sans text-[14px] transition-colors",
                           isActive
-                            ? "bg-[var(--brand-mist)] text-fg-1 font-medium"
+                            ? "bg-secondary text-secondary-foreground font-medium"
                             : "text-fg-2 font-normal hover:bg-[rgba(63,71,47,0.04)] hover:text-fg-1",
                         )
                       }
