@@ -19,8 +19,17 @@ export function TabsPage() {
       <PageHeader
         eyebrow="Components"
         title="Tabs"
-        lead="Switch between related views in place. The active trigger reads from the level-tinted surface, keeping the selected state consistent with the rest of the page."
+        lead="Switch between related views in place — each tab reveals a different panel of content. Use Tabs whenever clicking gives you new content (the Operational/Sustainability/Comfort table switcher, the Building Profile / Technical Summary form sections). If clicking instead re-slices the same content (e.g. a date range), that's a Segmented Control, not Tabs."
       />
+
+      <Section title="Two visual styles, same component">
+        <div className="rounded-xl border border-border bg-card p-5 shadow-[var(--shadow-xs)] text-[13px] leading-relaxed text-fg-2">
+          Tabs render in two looks in BIC — a <span className="text-fg-1 font-medium">pill / segmented</span> row
+          (the metric switcher) and classic <span className="text-fg-1 font-medium">folder tabs</span> with the
+          active tab joined to the panel below (the Building Summary page). Both are the same Tabs component;
+          only the styling differs. Pill-shaped ≠ Segmented Control — what matters is that Tabs swap content.
+        </div>
+      </Section>
       <Section
         title="Across levels"
         description="The active trigger's surface follows the level, keeping the selected tab consistent with the rest of the page."

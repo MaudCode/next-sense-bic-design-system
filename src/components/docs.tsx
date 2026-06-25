@@ -331,6 +331,37 @@ function ContrastRow({ steps }: { steps: string[] }) {
   );
 }
 
+/** "On white" row — the color used AS text on a white card (e.g. a data label /
+    number). Light shades fail; this shows which steps are safe for colored text. */
+function OnWhiteRow({ steps }: { steps: string[] }) {
+  return (
+    <div className="flex items-stretch gap-3 mt-2">
+      <span className="w-8 shrink-0 self-center text-[10px] uppercase tracking-[0.06em] text-fg-3 leading-tight">
+        on white
+      </span>
+      <div className="flex-1 grid grid-cols-5 gap-2">
+        {steps.map((c, i) => {
+          const ratio = contrastRatio(c, "#ffffff");
+          const sym = ratio >= 4.5 ? "✓" : ratio >= 3 ? "~" : "✕";
+          return (
+            <div
+              key={i}
+              className="h-14 rounded-lg border border-border bg-white flex flex-col items-center justify-center gap-0.5"
+            >
+              <span style={{ color: c }} className="font-mono text-[14px] font-semibold">
+                1,234
+              </span>
+              <span className="font-mono text-[9px] text-fg-2">
+                {ratio.toFixed(1)} {sym}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 /** Before/after comparison of a chart family — new (live) over the deprecated old set,
     plus a readability row showing the legible text color + WCAG ratio per step. */
 export function RampCompare({
@@ -353,6 +384,7 @@ export function RampCompare({
       <RampRow label="now" steps={oldSteps} deprecated />
       <RampRow label="new" steps={newSteps} />
       <ContrastRow steps={newSteps} />
+      <OnWhiteRow steps={newSteps} />
     </div>
   );
 }

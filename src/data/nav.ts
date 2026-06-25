@@ -43,6 +43,7 @@ export const NAV: NavGroup[] = [
       { title: "Card", path: "/components/card", status: "ready" },
       { title: "Table", path: "/components/table", status: "ready" },
       { title: "Tabs", path: "/components/tabs", status: "ready" },
+      { title: "Segmented Control", path: "/components/segmented-control", status: "ready" },
     ],
   },
   {

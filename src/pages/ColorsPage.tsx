@@ -409,7 +409,7 @@ export function ColorsPage() {
 
       <Section
         title="Chart ramps"
-        description="Three 5-step families for data viz. Every chart in the product reads from these — so reworking the tokens here improves all of them at once. Per family: the deprecated set (striped) over the new live ramp, then a readability row showing the legible label color (black/white) and its WCAG contrast ratio — ✓ ≥4.5 (text), ~ ≥3 (large text/UI), ✕ below."
+        description="Three 5-step families for data viz. Every chart in the product reads from these — so reworking the tokens here improves all of them at once. Per family: deprecated (striped) over the new live ramp; a text row (legible label color on the fill); and an on-white row (the color used as a number on a white card). WCAG ratios — ✓ ≥4.5, ~ ≥3 (large/UI), ✕ below. The light shades fail on white, so don't use them for text/numbers."
       >
         <div className="rounded-xl border border-border bg-card p-5 shadow-[var(--shadow-xs)]">
           {RAMPS.map((r) => (

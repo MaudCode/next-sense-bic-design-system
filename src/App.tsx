@@ -13,6 +13,7 @@ import { InputPage } from "@/pages/components/InputPage";
 import { CardPage } from "@/pages/components/CardPage";
 import { TablePage } from "@/pages/components/TablePage";
 import { TabsPage } from "@/pages/components/TabsPage";
+import { SegmentedControlPage } from "@/pages/components/SegmentedControlPage";
 import { FilterBarPage } from "@/pages/patterns/FilterBarPage";
 import { Placeholder } from "@/pages/Placeholder";
 
@@ -34,6 +35,7 @@ function App() {
         <Route path="/components/card" element={<CardPage />} />
         <Route path="/components/table" element={<TablePage />} />
         <Route path="/components/tabs" element={<TabsPage />} />
+        <Route path="/components/segmented-control" element={<SegmentedControlPage />} />
         <Route path="/patterns/filter-bar" element={<FilterBarPage />} />
         <Route path="*" element={<Placeholder eyebrow="404" title="Not found" />} />
       </Routes>
