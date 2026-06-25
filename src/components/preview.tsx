@@ -78,6 +78,7 @@ const LEVELS = [
   { name: "Building", cls: "level-building" },
   { name: "General", cls: "level-general" },
 ];
+const ASSISTANT_ROW = { name: "Assistant", cls: "context-assistant" };
 
 /**
  * Shows the same example three times — once per level — so the --primary /
@@ -112,10 +113,17 @@ export function LevelTriple({ children }: { children: ReactNode }) {
  * which parts stay constant. Preferred over a single base-palette preview for
  * anything that touches --primary / --accent / --ring.
  */
-export function LevelStack({ children }: { children: ReactNode }) {
+export function LevelStack({
+  children,
+  withAssistant = false,
+}: {
+  children: ReactNode;
+  withAssistant?: boolean;
+}) {
+  const rows = withAssistant ? [...LEVELS, ASSISTANT_ROW] : LEVELS;
   return (
     <div className="rounded-xl border border-border overflow-hidden shadow-[var(--shadow-xs)]">
-      {LEVELS.map((lvl, i) => (
+      {rows.map((lvl, i) => (
         <div
           key={lvl.cls}
           className={cn(

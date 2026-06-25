@@ -14,9 +14,9 @@ export function ButtonPage() {
 
       <Section
         title="Variants"
-        description="Every variant the component exposes, shown at each level. default, secondary and link follow the context — warm (Portfolio), blue (Building), olive-grey (General); outline, ghost and destructive stay constant. Not all of these are used in the product today — see Usage below."
+        description="Every variant the component exposes, shown at each level — plus the AI Assistant context (Digital Sun). default, secondary and link follow the context; outline, ghost and destructive stay constant. Not all of these are used in the product today — see Usage below."
       >
-        <LevelStack>
+        <LevelStack withAssistant>
           <Button>Primary</Button>
           <Button variant="secondary">Secondary</Button>
           <Button variant="outline">Outline</Button>
@@ -53,6 +53,14 @@ export function ButtonPage() {
               <li>
                 Primary text: dark (<span className="font-mono">--foreground</span>) at
                 Portfolio &amp; Building, white at General.
+              </li>
+              <li>
+                AI Assistant: <span className="font-mono">[data-testid="chat-panel"]</span>{" "}
+                only remaps <span className="font-mono">--primary</span>/
+                <span className="font-mono">--ring</span> today — also remap{" "}
+                <span className="font-mono">--accent</span> (#F5FDD3) and{" "}
+                <span className="font-mono">--secondary</span> (#E5FB8C), or outline
+                suggestion chips fall back to the base Haze <em>blue</em> on hover/click.
               </li>
             </ul>
           </EngineeringNote>

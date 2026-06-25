@@ -178,6 +178,13 @@
 .context-assistant {
   --primary: var(--brand-digital-sun); /* #D9FF41 */
   --primary-foreground: var(--foreground);
+  /* Remap secondary + accent too, else outline/ghost/secondary surfaces in the
+     chat fall back to the BASE accent (Haze blue) — the "click an outline chip
+     and it turns blue" bug. Keep them in the Digital Sun family. */
+  --secondary: var(--brand-halo); /* #E5FB8C */
+  --secondary-foreground: var(--foreground);
+  --accent: var(--assistant-accent); /* #F5FDD3 — Digital Sun 4AM */
+  --accent-foreground: var(--foreground);
   --ring: var(--border);
 }
 
