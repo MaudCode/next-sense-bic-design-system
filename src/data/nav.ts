@@ -1,4 +1,4 @@
-import { BookOpen, Shapes, Component, PanelTop, BarChart3, type LucideIcon } from "lucide-react";
+import { BookOpen, Shapes, Component, PanelTop, type LucideIcon } from "lucide-react";
 
 export interface NavItem {
   title: string;
@@ -44,12 +44,8 @@ export const NAV: NavGroup[] = [
       { title: "Table", path: "/components/table", status: "ready" },
       { title: "Tabs", path: "/components/tabs", status: "ready" },
       { title: "Segmented Control", path: "/components/segmented-control", status: "ready" },
+      { title: "Charts", path: "/charts", status: "ready" },
     ],
-  },
-  {
-    title: "Data viz",
-    icon: BarChart3,
-    items: [{ title: "Charts", path: "/charts", status: "ready" }],
   },
   {
     title: "Patterns",

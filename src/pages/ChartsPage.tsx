@@ -68,11 +68,38 @@ function Donut({ slices, total, unit }: { slices: { label: string; value: number
 }
 
 // ── page ─────────────────────────────────────────────────────────────────
-const SOURCES = [
-  { label: "Electric 52%", value: 52, color: BLUE[2] },
-  { label: "Gas 30%", value: 30, color: RED[1] },
-  { label: "Solar 18%", value: 18, color: YELLOW[3] },
+// Energy by Use — categories mapped to ramp steps exactly as analytics-charts.tsx does.
+const USE = [
+  { label: "Cooling 34%", value: 34, color: BLUE[0] },
+  { label: "Heating 22%", value: 22, color: RED[0] },
+  { label: "Ventilation 16%", value: 16, color: BLUE[2] },
+  { label: "Lighting 14%", value: 14, color: YELLOW[2] },
+  { label: "Electricity 10%", value: 10, color: YELLOW[0] },
+  { label: "Other 4%", value: 4, color: RED[3] },
 ];
+
+// The real category → ramp-step map (from analytics-charts.tsx).
+const CATEGORY_MAP = {
+  warm: [
+    { cat: "Heating · Gas", c: RED[0], t: "red-1" },
+    { cat: "Hot Water · HVAC", c: RED[1], t: "red-2" },
+    { cat: "Temperature", c: RED[1], t: "red-2" },
+    { cat: "Other · Tenant loads", c: RED[3], t: "red-4" },
+  ],
+  cool: [
+    { cat: "Cooling · Chilled Water", c: BLUE[0], t: "blue-1" },
+    { cat: "Humidity", c: BLUE[0], t: "blue-1" },
+    { cat: "Occupied · Avg · Current", c: BLUE[1], t: "blue-2" },
+    { cat: "Ventilation · CO₂", c: BLUE[2], t: "blue-3" },
+  ],
+  solar: [
+    { cat: "Electric · Electricity", c: YELLOW[0], t: "yellow-1" },
+    { cat: "Comfort A (optimal)", c: YELLOW[0], t: "yellow-1" },
+    { cat: "Lighting · Solar PV", c: YELLOW[2], t: "yellow-3" },
+    { cat: "Comfort B (good)", c: YELLOW[2], t: "yellow-3" },
+  ],
+};
+const FALLBACK = [RED[0], BLUE[0], YELLOW[0], BLUE[2], YELLOW[2], RED[3], BLUE[1], RED[1], YELLOW[1]];
 
 const AREA = (() => {
   const w = 560, h = 170, n = 24;
@@ -112,20 +139,43 @@ export function ChartsPage() {
         lead="The chart types used across BIC, and the rules for coloring them. The headline rule: color carries the data (lines, bars, arcs, dots) — text never does. Numbers and labels are Verdure so they're always readable."
       />
 
-      <Section title="Rules">
+      <Section title="The rules" description="Apply these to every chart — bar, area, line, donut, Sankey.">
         <div className="rounded-xl border border-border bg-card p-5 shadow-[var(--shadow-xs)] text-[13px] leading-relaxed text-fg-2 space-y-2">
-          <p><span className="text-fg-1 font-medium">1 · Pick the family by meaning.</span> Blue = comfort/efficiency, Red = energy/heat/alerts, Yellow = solar/sustainability (see Colors › Chart ramps).</p>
-          <p><span className="text-fg-1 font-medium">2 · Color goes on the data, not the text.</span> Lines, bars, arcs, dots and legend swatches use the ramp. Numbers, %, axis and labels are <span className="font-mono">--fg-1</span> (Verdure).</p>
-          <p><span className="text-fg-1 font-medium">3 · Light shades are for fills only.</span> Never use a light shade for text — it’s unreadable on white. A colored number is OK only in a <span className="font-mono">dark</span> shade (step 4–5) or a status color.</p>
-          <p><span className="text-fg-1 font-medium">4 · Legend = swatch + Verdure label.</span> Tie text to a series with a colored dot, not colored text.</p>
+          <p><span className="text-fg-1 font-medium">1 · Color carries the data, never the text.</span> Lines, bars, arcs, dots and legend swatches use the ramp. Numbers, %, axis ticks and labels are <span className="font-mono">--fg-1</span> (Verdure). <span className="text-fg-1">This is the one that’s broken today.</span></p>
+          <p><span className="text-fg-1 font-medium">2 · Categories map to a step by meaning.</span> Warm = heat/energy, Cool = comfort/water, Solar = electric/light/positive. Use the map below; overflow cycles a fixed sequence so series stay distinct.</p>
+          <p><span className="text-fg-1 font-medium">3 · Light shades are fills only.</span> A colored number/label is OK only in a <span className="font-mono">dark</span> shade (step 4–5) or a status color — never step 1–2.</p>
+          <p><span className="text-fg-1 font-medium">4 · Legend = swatch + Verdure label.</span> The Total / aggregate line is Verdure, not a ramp color.</p>
         </div>
       </Section>
 
-      <Section title="Donut" description="Composition of a whole — energy sources, energy by use, comfort categories. Center total and legend stay Verdure.">
-        <ChartCard title="Energy Sources" sub="By source type">
-          <div className="flex items-center gap-6">
-            <Donut slices={SOURCES} total="159" unit="MWh" />
-            <Legend items={SOURCES} />
+      <Section title="Category colors" description="How categories map to ramp steps in the product (analytics-charts.tsx). Same mapping across donut, bar, area, line.">
+        <div className="rounded-xl border border-border bg-card p-5 shadow-[var(--shadow-xs)] grid sm:grid-cols-3 gap-x-6 gap-y-1">
+          {([["Warm", CATEGORY_MAP.warm], ["Cool", CATEGORY_MAP.cool], ["Solar", CATEGORY_MAP.solar]] as const).map(([fam, rows]) => (
+            <div key={fam}>
+              <div className="text-[11px] font-medium uppercase tracking-[0.06em] text-fg-2 mb-2">{fam}</div>
+              {rows.map((r) => (
+                <div key={r.cat} className="flex items-center gap-2 py-1">
+                  <span className="w-4 h-4 rounded shrink-0 border border-border" style={{ background: r.c }} />
+                  <span className="text-[12px] text-fg-1 leading-tight">{r.cat}</span>
+                  <span className="ml-auto font-mono text-[10px] text-fg-3">{r.t}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+        <div className="mt-3 flex items-center gap-2 text-[12px] text-fg-2">
+          <span>Unmapped categories cycle:</span>
+          {FALLBACK.map((c, i) => (
+            <span key={i} className="w-4 h-4 rounded border border-border" style={{ background: c }} />
+          ))}
+        </div>
+      </Section>
+
+      <Section title="Donut" description="Composition of a whole — energy by use, sources, comfort. Slices use the category map; center total and legend stay Verdure.">
+        <ChartCard title="Energy by Use" sub="By consumption type">
+          <div className="flex flex-wrap items-center gap-6">
+            <Donut slices={USE} total="174" unit="MWh" />
+            <Legend items={USE} />
           </div>
         </ChartCard>
       </Section>
@@ -219,6 +269,14 @@ export function ChartsPage() {
               <TrendingDown size={13} /> −1.4% vs last period
             </div>
           </ChartCard>
+        </div>
+      </Section>
+
+      <Section title="Also in BIC" description="Bar, area, line, composed and Sankey are the chart types in use — all follow the rules above.">
+        <div className="rounded-xl border border-border bg-card p-5 shadow-[var(--shadow-xs)] text-[13px] leading-relaxed text-fg-2 space-y-1.5">
+          <p><span className="text-fg-1 font-medium">Stacked bar &amp; area</span> (Energy by Use / Source) — each category gets its mapped color; the Total line is Verdure.</p>
+          <p><span className="text-fg-1 font-medium">Line &amp; composed</span> (trends, EUI, hourly profile) — series via the map; axis ticks and values Verdure.</p>
+          <p><span className="text-fg-1 font-medium">Sankey / Energy Flow</span> — nodes take the category color, links stay a neutral grey, labels Verdure.</p>
         </div>
       </Section>
 
