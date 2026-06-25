@@ -42,7 +42,7 @@ function Legend({ items }: { items: { label: string; color: string }[] }) {
   );
 }
 
-function Donut({ slices, total, unit }: { slices: { label: string; value: number; color: string }[]; total: string; unit: string }) {
+function Donut({ slices, total, unit, centerLabel = "Total" }: { slices: { label: string; value: number; color: string }[]; total: string; unit: string; centerLabel?: string }) {
   const size = 168, rw = 28, R = size / 2, r = R - rw, cx = R, cy = R;
   const sum = slices.reduce((s, x) => s + x.value, 0);
   const GAP = 0.02;
@@ -59,7 +59,7 @@ function Donut({ slices, total, unit }: { slices: { label: string; value: number
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
       {arcs.map((a, i) => <path key={i} d={a.d} fill={a.color} />)}
-      <text x={cx} y={cy - 4} textAnchor="middle" fontSize="10" fill="#929083" fontFamily="var(--font-sans)">Total</text>
+      <text x={cx} y={cy - 4} textAnchor="middle" fontSize="10" fill="#929083" fontFamily="var(--font-sans)">{centerLabel}</text>
       <text x={cx} y={cy + 15} textAnchor="middle" fontSize="22" fontWeight="500" fill={INK} fontFamily="var(--font-formula)">
         {total} <tspan fontSize="12" fill="#929083">{unit}</tspan>
       </text>
@@ -130,43 +130,104 @@ const ROOMS = [
   { name: "Meeting Room", pct: 48, sub: "282 min/day avg" },
 ];
 
+// Good → bad severity scale (comfort, CO₂, temperature bands)
+const SEVERITY = [
+  { label: "Optimal", c: YELLOW[1] },
+  { label: "Good", c: YELLOW[2] },
+  { label: "Fair", c: RED[0] },
+  { label: "Elevated", c: RED[1] },
+  { label: "High", c: RED[3] },
+];
+
+// CO₂ comfort donut (from the live Comfort page)
+const CO2 = [
+  { label: "Optimal 39%", value: 39, color: YELLOW[1] },
+  { label: "Good 41%", value: 41, color: YELLOW[2] },
+  { label: "Fair 12%", value: 12, color: RED[0] },
+  { label: "Elevated 7%", value: 7, color: RED[1] },
+  { label: "High 1%", value: 1, color: RED[3] },
+];
+
+// Stacked bar — Energy by Use, a few weeks
+const STACK_CATS = [
+  { key: "Cooling", color: BLUE[0] },
+  { key: "Heating", color: RED[0] },
+  { key: "Ventilation", color: BLUE[2] },
+  { key: "Lighting", color: YELLOW[2] },
+  { key: "Other", color: RED[3] },
+];
+const STACK = [
+  { wk: "Wk 1", vals: [34, 22, 16, 14, 6] },
+  { wk: "Wk 2", vals: [30, 26, 15, 13, 5] },
+  { wk: "Wk 3", vals: [36, 20, 18, 12, 6] },
+  { wk: "Wk 4", vals: [18, 28, 10, 8, 4] },
+];
+
 export function ChartsPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Data viz"
+        eyebrow="Components"
         title="Charts"
-        lead="The chart types used across BIC, and the rules for coloring them. The headline rule: color carries the data (lines, bars, arcs, dots) — text never does. Numbers and labels are Verdure so they're always readable."
+        lead="The chart types used across BIC, and how to color them. The headline rule: color carries the data (lines, bars, arcs, dots) — text never does. Numbers and labels are Verdure so they're always readable."
       />
 
       <Section title="The rules" description="Apply these to every chart — bar, area, line, donut, Sankey.">
         <div className="rounded-xl border border-border bg-card p-5 shadow-[var(--shadow-xs)] text-[13px] leading-relaxed text-fg-2 space-y-2">
           <p><span className="text-fg-1 font-medium">1 · Color carries the data, never the text.</span> Lines, bars, arcs, dots and legend swatches use the ramp. Numbers, %, axis ticks and labels are <span className="font-mono">--fg-1</span> (Verdure). <span className="text-fg-1">This is the one that’s broken today.</span></p>
-          <p><span className="text-fg-1 font-medium">2 · Categories map to a step by meaning.</span> Warm = heat/energy, Cool = comfort/water, Solar = electric/light/positive. Use the map below; overflow cycles a fixed sequence so series stay distinct.</p>
+          <p><span className="text-fg-1 font-medium">2 · Color says what the data means.</span> Warm for heat/energy, cool for comfort/water/air, solar-green for electric/light/positive. Good→bad uses a green→red severity scale. See “Choosing colors” below.</p>
           <p><span className="text-fg-1 font-medium">3 · Light shades are fills only.</span> A colored number/label is OK only in a <span className="font-mono">dark</span> shade (step 4–5) or a status color — never step 1–2.</p>
           <p><span className="text-fg-1 font-medium">4 · Legend = swatch + Verdure label.</span> The Total / aggregate line is Verdure, not a ramp color.</p>
         </div>
       </Section>
 
-      <Section title="Category colors" description="How categories map to ramp steps in the product (analytics-charts.tsx). Same mapping across donut, bar, area, line.">
-        <div className="rounded-xl border border-border bg-card p-5 shadow-[var(--shadow-xs)] grid sm:grid-cols-3 gap-x-6 gap-y-1">
-          {([["Warm", CATEGORY_MAP.warm], ["Cool", CATEGORY_MAP.cool], ["Solar", CATEGORY_MAP.solar]] as const).map(([fam, rows]) => (
+      <Section
+        title="Choosing colors"
+        description="Color does three jobs in a chart. The product has a built-in lookup that assigns these automatically — here's the thinking behind it."
+      >
+        {/* (a) by meaning */}
+        <h3 className="font-formula text-[15px] font-medium text-fg-1 mb-1">By meaning</h3>
+        <p className="text-[12px] text-fg-2 mb-3 max-w-2xl">
+          Each kind of reading has a home family, so a color always means the same thing —
+          heat is warm, comfort/water/air is cool, electric/light/positive is solar-green.
+        </p>
+        <div className="rounded-xl border border-border bg-card p-5 shadow-[var(--shadow-xs)] grid sm:grid-cols-3 gap-x-6 gap-y-1 mb-7">
+          {([["Warm — heat / energy", CATEGORY_MAP.warm], ["Cool — comfort / water / air", CATEGORY_MAP.cool], ["Solar — electric / light", CATEGORY_MAP.solar]] as const).map(([fam, rows]) => (
             <div key={fam}>
               <div className="text-[11px] font-medium uppercase tracking-[0.06em] text-fg-2 mb-2">{fam}</div>
               {rows.map((r) => (
                 <div key={r.cat} className="flex items-center gap-2 py-1">
                   <span className="w-4 h-4 rounded shrink-0 border border-border" style={{ background: r.c }} />
                   <span className="text-[12px] text-fg-1 leading-tight">{r.cat}</span>
-                  <span className="ml-auto font-mono text-[10px] text-fg-3">{r.t}</span>
                 </div>
               ))}
             </div>
           ))}
         </div>
-        <div className="mt-3 flex items-center gap-2 text-[12px] text-fg-2">
-          <span>Unmapped categories cycle:</span>
+
+        {/* (b) severity */}
+        <h3 className="font-formula text-[15px] font-medium text-fg-1 mb-1">Good → bad (severity)</h3>
+        <p className="text-[12px] text-fg-2 mb-3 max-w-2xl">
+          For comfort, CO₂ and temperature bands — a green-to-red scale where the worst end is the strongest red.
+        </p>
+        <div className="rounded-xl border border-border bg-card p-4 shadow-[var(--shadow-xs)] flex flex-wrap gap-2 mb-7">
+          {SEVERITY.map((s) => (
+            <div key={s.label} className="flex-1 min-w-20 rounded-lg border border-border p-2 flex flex-col items-center gap-1.5">
+              <span className="w-full h-6 rounded" style={{ background: s.c }} />
+              <span className="text-[11px] text-fg-1">{s.label}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* (c) many series */}
+        <h3 className="font-formula text-[15px] font-medium text-fg-1 mb-1">Many series</h3>
+        <p className="text-[12px] text-fg-2 mb-3 max-w-2xl">
+          When a chart has more series than named colors (e.g. a 9-category stack), it walks
+          this fixed order — so a given series always keeps the same color across charts.
+        </p>
+        <div className="flex items-center gap-2">
           {FALLBACK.map((c, i) => (
-            <span key={i} className="w-4 h-4 rounded border border-border" style={{ background: c }} />
+            <span key={i} className="w-7 h-7 rounded-lg border border-border" style={{ background: c }} />
           ))}
         </div>
       </Section>
@@ -176,6 +237,15 @@ export function ChartsPage() {
           <div className="flex flex-wrap items-center gap-6">
             <Donut slices={USE} total="174" unit="MWh" />
             <Legend items={USE} />
+          </div>
+        </ChartCard>
+      </Section>
+
+      <Section title="Comfort categories" description="The CO₂ / temperature / humidity donuts. Bands use the good→bad severity scale; the centre % and legend stay Verdure.">
+        <ChartCard title="CO₂" sub="Share of time · business hours">
+          <div className="flex flex-wrap items-center gap-6">
+            <Donut slices={CO2} total="39" unit="%" centerLabel="< 500 ppm" />
+            <Legend items={CO2} />
           </div>
         </ChartCard>
       </Section>
@@ -220,6 +290,30 @@ export function ChartsPage() {
               );
             })}
           </svg>
+        </ChartCard>
+      </Section>
+
+      <Section title="Stacked bar & area" description="Multi-category over time — Energy by Use / Source. Each category keeps its 'by meaning' color; axis labels Verdure.">
+        <ChartCard title="Energy by Use" sub="Consumption by category · weekly">
+          <svg viewBox="0 0 360 160" className="w-full h-44">
+            {STACK.map((col, ci) => {
+              const x = 30 + ci * 80, bw = 48;
+              const totalV = col.vals.reduce((s, v) => s + v, 0);
+              let y = 140;
+              return (
+                <g key={col.wk}>
+                  {col.vals.map((v, si) => {
+                    const segH = (v / 100) * 120;
+                    y -= segH;
+                    return <rect key={si} x={x} y={y} width={bw} height={segH} fill={STACK_CATS[si].color} />;
+                  })}
+                  <text x={x + bw / 2} y={154} textAnchor="middle" fontSize="9" fill={INK} fontFamily="var(--font-sans)">{col.wk}</text>
+                  <text x={x + bw / 2} y={134 - (totalV / 100) * 120} textAnchor="middle" fontSize="9" fill={INK} fontFamily="var(--font-mono)">{totalV}</text>
+                </g>
+              );
+            })}
+          </svg>
+          <Legend items={STACK_CATS.map((c) => ({ label: c.key, color: c.color }))} />
         </ChartCard>
       </Section>
 
@@ -281,14 +375,24 @@ export function ChartsPage() {
       </Section>
 
       <Section title="For engineering">
-        <EngineeringNote>
-          Audit any chart label / legend / number set to a light chart shade
-          (<span className="font-mono">color: var(--chart-*-1/2)</span>) and switch it to{" "}
-          <span className="font-mono">--fg-1</span> — confirmed unreadable on white (the
-          occupancy % feedback). Keep the ramp on the lines/bars/arcs. Colored numbers only in a
-          dark shade (step 4–5) or a status color (<span className="font-mono">#2E6A39</span> /{" "}
-          <span className="font-mono">#8E2018</span>).
-        </EngineeringNote>
+        <div className="space-y-3">
+          <EngineeringNote>
+            <strong>Colored text.</strong> Audit any chart label / legend / number set to a light
+            chart shade (<span className="font-mono">color: var(--chart-*-1/2)</span>) and switch it
+            to <span className="font-mono">--fg-1</span> — confirmed unreadable on white (the
+            occupancy % feedback). Keep the ramp on the lines/bars/arcs. Colored numbers only in a
+            dark shade (step 4–5) or a status color (<span className="font-mono">#2E6A39</span> /{" "}
+            <span className="font-mono">#8E2018</span>).
+          </EngineeringNote>
+          <EngineeringNote>
+            <strong>Off-palette colors.</strong> Several charts hardcode non-brand Tailwind
+            colors instead of tokens — <span className="font-mono">#10B981</span> (emerald),{" "}
+            <span className="font-mono">#3B82F6</span> (blue), <span className="font-mono">#EF4444</span>{" "}
+            (red), and greys <span className="font-mono">#6B7280 / #9CA3AF / #E5E7EB / #374151</span>.
+            Replace with the chart ramps (<span className="font-mono">--chart-*</span>) and{" "}
+            <span className="font-mono">--fg-* / --border</span> so charts stay on-brand and re-tint with the system.
+          </EngineeringNote>
+        </div>
       </Section>
     </>
   );
