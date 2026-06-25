@@ -94,9 +94,7 @@ const CATEGORY_MAP = {
   ],
   solar: [
     { cat: "Electric · Electricity", c: YELLOW[0], t: "yellow-1" },
-    { cat: "Comfort A (optimal)", c: YELLOW[0], t: "yellow-1" },
     { cat: "Lighting · Solar PV", c: YELLOW[2], t: "yellow-3" },
-    { cat: "Comfort B (good)", c: YELLOW[2], t: "yellow-3" },
   ],
 };
 const FALLBACK = [RED[0], BLUE[0], YELLOW[0], BLUE[2], YELLOW[2], RED[3], BLUE[1], RED[1], YELLOW[1]];
@@ -208,7 +206,9 @@ export function ChartsPage() {
         {/* (b) severity */}
         <h3 className="font-formula text-[15px] font-medium text-fg-1 mb-1">Good → bad (severity)</h3>
         <p className="text-[12px] text-fg-2 mb-3 max-w-2xl">
-          For comfort, CO₂ and temperature bands — a green-to-red scale where the worst end is the strongest red.
+          For the CO₂ / temperature / humidity donuts — 5 bands, worst end the strongest red.
+          CO₂ runs one way (Optimal → High); temperature & humidity are diverging (too cold ←
+          optimal → too hot), with the optimal band green in the middle.
         </p>
         <div className="rounded-xl border border-border bg-card p-4 shadow-[var(--shadow-xs)] flex flex-wrap gap-2 mb-7">
           {SEVERITY.map((s) => (
