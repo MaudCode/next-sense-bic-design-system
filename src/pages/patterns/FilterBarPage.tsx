@@ -109,7 +109,7 @@ export function FilterBarPage() {
         description="The exact same bar at portfolio level — everything re-tints warm: the selected preset and back-button border become Sunrise, with no markup change."
       >
         <Preview center={false} className="level-portfolio p-0 bg-[var(--bg-1)]">
-          <Bar crumbParent="All Buildings" crumbActive="Lighthouse" backLabel="Back to All Buildings" />
+          <Bar crumbParent="Lighthouse" crumbActive="All Buildings" backLabel="Back to All Buildings" />
         </Preview>
       </Section>
     </>
