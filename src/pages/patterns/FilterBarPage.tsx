@@ -41,22 +41,11 @@ function Bar({
         </Button>
         <Separator orientation="vertical" className="h-6" />
         <div className="flex items-center gap-1.5">
-          {PRESETS.map((p) =>
-            p === "30d" ? (
-              <Button
-                key={p}
-                variant="outline"
-                size="sm"
-                className="bg-primary border-primary text-primary-foreground hover:bg-primary"
-              >
-                {p}
-              </Button>
-            ) : (
-              <Button key={p} variant="outline" size="sm">
-                {p}
-              </Button>
-            ),
-          )}
+          {PRESETS.map((p) => (
+            <Button key={p} variant={p === "30d" ? "default" : "outline"} size="sm">
+              {p}
+            </Button>
+          ))}
         </div>
         <Separator orientation="vertical" className="h-6" />
         <Button variant="outline" size="sm">
@@ -89,10 +78,9 @@ export function FilterBarPage() {
         <CodeBlock
           code={`<Button variant="accentOutline" size="sm"><ArrowLeft /> Back to Lighthouse</Button>
 
-{/* date presets — outline buttons; the SELECTED one fills with --primary */}
+{/* date presets — selected = variant="default" (--primary), rest = outline */}
 {["24h","7d","30d","6M","1Y"].map((p) => (
-  <Button key={p} variant="outline" size="sm"
-    className={p === active ? "bg-primary border-primary text-primary-foreground" : ""}>{p}</Button>
+  <Button key={p} size="sm" variant={p === active ? "default" : "outline"}>{p}</Button>
 ))}
 
 <Button variant="outline" size="sm"><Calendar /> Jun 25 – Jul 25</Button>
@@ -102,12 +90,13 @@ export function FilterBarPage() {
           <EngineeringNote>
             <ul className="list-disc pl-4 space-y-1">
               <li>
-                The selected date preset should fill with <span className="font-mono">--primary</span>{" "}
-                (so it re-tints per level, like the selected nav item) — in BIC it's likely a
-                hardcoded blue / accent wash today, which is wrong.
+                The selected preset already fills with <span className="font-mono">--primary</span>{" "}
+                (<span className="font-mono">variant="default"</span> in{" "}
+                <span className="font-mono">date-range-picker.tsx</span>) — good, it re-tints per
+                level like the selected nav item.
               </li>
               <li>
-                The date presets and date-range button are pills
+                Only fix: the presets and date-range button are pills
                 (<span className="font-mono">rounded-full</span>) in BIC — they should use the
                 regular button radius (<span className="font-mono">md</span>), same as the
                 "Back to…" fix.

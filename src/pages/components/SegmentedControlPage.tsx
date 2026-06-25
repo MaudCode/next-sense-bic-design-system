@@ -1,27 +1,25 @@
 import { useState } from "react";
 import { EngineeringNote, PageHeader, Section } from "@/components/docs";
 import { Preview, CodeBlock, LevelTriple } from "@/components/preview";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Button } from "@/components/ui/button";
 
 const PRESETS = ["24h", "7d", "30d", "6M", "1Y"];
-const ON = "data-[state=on]:bg-primary data-[state=on]:border-primary data-[state=on]:text-primary-foreground";
 
 function DatePresets() {
   const [value, setValue] = useState("30d");
   return (
-    <ToggleGroup
-      type="single"
-      variant="outline"
-      size="sm"
-      value={value}
-      onValueChange={(v) => v && setValue(v)}
-    >
+    <div className="flex flex-wrap items-center gap-2">
       {PRESETS.map((p) => (
-        <ToggleGroupItem key={p} value={p} className={`px-3 ${ON}`}>
+        <Button
+          key={p}
+          variant={value === p ? "default" : "outline"}
+          size="sm"
+          onClick={() => setValue(p)}
+        >
           {p}
-        </ToggleGroupItem>
+        </Button>
       ))}
-    </ToggleGroup>
+    </div>
   );
 }
 
@@ -31,28 +29,22 @@ export function SegmentedControlPage() {
       <PageHeader
         eyebrow="Components"
         title="Segmented Control"
-        lead="A small row of options where you pick exactly one, and the choice stays selected. Use it to set a value or filter for content that's already on screen — like the date-range presets. Built on ToggleGroup (single-select)."
+        lead="A row of options where you pick exactly one and it stays selected — used to set a value or filter for content that's already on screen, like the date-range presets. It's not a separate component: it's a row of Buttons where the selected one is variant=default (primary) and the rest are outline. Same buttons as the filter bar."
       />
 
       <Section
         title="Tabs or Segmented Control?"
-        description="They can look identical — the difference is what clicking does."
+        description="Ask: did clicking give me new content, or the same content sliced differently?"
       >
         <div className="rounded-xl border border-border bg-card p-5 shadow-[var(--shadow-xs)] text-[13px] leading-relaxed text-fg-1">
-          <p className="mb-2">
-            Ask: <strong>did I just get new content, or the same content sliced
-            differently?</strong>
-          </p>
           <ul className="space-y-1 text-fg-2">
             <li>
-              <span className="text-fg-1 font-medium">New content</span> → use{" "}
-              <span className="font-medium">Tabs</span> (e.g. Operational → Sustainability
-              swaps the whole table; Building Profile → Technical Summary swaps the fields).
+              <span className="text-fg-1 font-medium">New content</span> → Tabs (Operational →
+              Sustainability swaps the table; usually a connected pill or folder tabs).
             </li>
             <li>
-              <span className="text-fg-1 font-medium">Same content, adjusted</span> → use a{" "}
-              <span className="font-medium">Segmented Control</span> (e.g. 24h → 30d: the
-              same chart, longer window).
+              <span className="text-fg-1 font-medium">Same content, adjusted</span> → Segmented
+              Control (24h → 30d: same chart, longer window; separate buttons, one selected).
             </li>
           </ul>
         </div>
@@ -60,36 +52,33 @@ export function SegmentedControlPage() {
 
       <Section
         title="Example — date range"
-        description="Single-select: click a preset and it stays. The selected segment fills with --primary (the same selected-state color as the nav and tabs)."
+        description="Click a preset and it stays. Selected = variant=default (fills with --primary); the rest are variant=outline. Regular button radius — no pills."
       >
         <Preview><DatePresets /></Preview>
         <CodeBlock
           code={`const [range, setRange] = useState("30d")
 
-<ToggleGroup type="single" variant="outline" size="sm"
-  value={range} onValueChange={(v) => v && setRange(v)}>
-  {["24h","7d","30d","6M","1Y"].map((p) => (
-    <ToggleGroupItem key={p} value={p}
-      className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">
-      {p}
-    </ToggleGroupItem>
-  ))}
-</ToggleGroup>`}
+{["24h","7d","30d","6M","1Y"].map((p) => (
+  <Button key={p} size="sm" onClick={() => setRange(p)}
+    variant={range === p ? "default" : "outline"}>
+    {p}
+  </Button>
+))}`}
         />
       </Section>
 
       <Section
         title="Across levels"
-        description="The selected segment uses --primary, so it re-tints per context — Sunrise, Sky, Vendure 60, Digital Sun."
+        description="The selected button is variant=default, so it fills with --primary and re-tints per context — Sunrise, Sky, Vendure 60, Digital Sun."
       >
         <LevelTriple withAssistant>
-          <ToggleGroup type="single" variant="outline" size="sm" defaultValue="30d">
+          <div className="flex items-center gap-2">
             {["24h", "30d", "1Y"].map((p) => (
-              <ToggleGroupItem key={p} value={p} className={`px-2.5 ${ON}`}>
+              <Button key={p} variant={p === "30d" ? "default" : "outline"} size="sm">
                 {p}
-              </ToggleGroupItem>
+              </Button>
             ))}
-          </ToggleGroup>
+          </div>
         </LevelTriple>
       </Section>
 
@@ -97,17 +86,14 @@ export function SegmentedControlPage() {
         <EngineeringNote>
           <ul className="list-disc pl-4 space-y-1">
             <li>
-              Build the date presets as a <span className="font-mono">ToggleGroup type="single"</span>,
-              not styled <span className="font-mono">Button</span>s — buttons are momentary and
-              shouldn't carry a persistent selected state.
+              These are <span className="font-mono">Button</span>s, single-select — selected is{" "}
+              <span className="font-mono">variant="default"</span> (already correct in{" "}
+              <span className="font-mono">date-range-picker.tsx</span>), rest are{" "}
+              <span className="font-mono">variant="outline"</span>.
             </li>
             <li>
-              The selected (<span className="font-mono">data-[state=on]</span>) segment should fill
-              with <span className="font-mono">--primary</span> (re-tints per level) — shadcn's
-              toggle defaults to <span className="font-mono">--accent</span>, so override it.
-            </li>
-            <li>
-              Regular button radius (<span className="font-mono">md</span>) — no pills.
+              Only fix needed: they're <span className="font-mono">rounded-full</span> (pill)
+              today — should be the regular button radius (<span className="font-mono">md</span>).
             </li>
           </ul>
         </EngineeringNote>
