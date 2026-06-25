@@ -52,9 +52,9 @@ export function SegmentedControlPage() {
 
       <Section
         title="Example — date range"
-        description="Click a preset and it stays. Selected = variant=default (fills with --primary); the rest are variant=outline. Regular button radius — no pills."
+        description="Shown at Building level. Click a preset and it stays. Selected = variant=default (fills with --primary, dark text); the rest are variant=outline. Regular button radius — no pills."
       >
-        <Preview><DatePresets /></Preview>
+        <Preview className="level-building"><DatePresets /></Preview>
         <CodeBlock
           code={`const [range, setRange] = useState("30d")
 
