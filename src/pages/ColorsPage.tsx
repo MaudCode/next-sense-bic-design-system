@@ -81,7 +81,6 @@ const LEVEL_AWARE = [
 ];
 
 const CONSTANT = [
-  { swatch: "#D63B30", name: "destructive", token: "--destructive", role: "Alerts, delete actions" },
   { swatch: "oklch(0.97 0 0)", name: "muted", token: "--muted", role: "Disabled & quiet surfaces" },
   { swatch: "oklch(0.922 0 0)", name: "border", token: "--border", role: "1px hairlines & inputs" },
 ];
@@ -206,40 +205,33 @@ export function ColorsPage() {
 
       <Section
         title="Semantic tokens"
-        description="The shadcn-facing layer. Components only ever reference these — never raw brand hexes — so re-tinting one token cascades everywhere."
+        description="The shadcn-facing layer — components reference these, never raw brand hexes, so a change cascades everywhere. Three kinds: contextual (re-tint per level), status (fixed meaning), and structural."
       >
+        {/* — Level-aware — */}
         <h3 className="font-formula text-[15px] font-medium text-fg-1 mb-1 capitalize">
           Level-aware
         </h3>
         <p className="text-[12px] text-fg-2 mb-3 max-w-2xl">
-          These three change with the active level — Portfolio (warm), Building
-          (blue), General (olive). This is the core mechanism: one attribute on{" "}
-          <span className="font-mono">&lt;html&gt;</span> re-tints them and every
-          button, ring and active state follows.
+          These four change with the active level — Portfolio (warm), Building (blue),
+          General (olive). One attribute on <span className="font-mono">&lt;html&gt;</span>{" "}
+          re-tints them and every button, ring and active state follows; see{" "}
+          <span className="font-medium">Levels</span> below for the live result.
         </p>
-        <div className="rounded-xl border border-border bg-card px-5 shadow-[var(--shadow-xs)] mb-7">
+        <div className="rounded-xl border border-border bg-card px-5 shadow-[var(--shadow-xs)] mb-8">
           {LEVEL_AWARE.map((t) => (
             <LevelTokenRow key={t.token} {...t} />
           ))}
         </div>
 
+        {/* — Status — */}
         <h3 className="font-formula text-[15px] font-medium text-fg-1 mb-1 capitalize">
-          Constant across levels
+          Status
         </h3>
         <p className="text-[12px] text-fg-2 mb-3 max-w-2xl">
-          The same in every context — they carry fixed meaning regardless of level.
+          Success, warning and alert — health, connection status, trends, destructive
+          actions. Each has a solid (dots / bars), a soft fill (pill backgrounds) and a
+          text color. Level-agnostic: meaning trumps context.
         </p>
-        <div className="rounded-xl border border-border bg-card px-5 shadow-[var(--shadow-xs)]">
-          {CONSTANT.map((t) => (
-            <TokenRow key={t.token} {...t} />
-          ))}
-        </div>
-      </Section>
-
-      <Section
-        title="Status / Semantic"
-        description="Success, warning and alert — for health, connection status, trends and destructive actions. Each role has a solid (dots, bars, donuts), a soft fill (pill backgrounds) and a text color. These are level-agnostic: meaning trumps context."
-      >
         <div className="rounded-xl border border-border bg-card divide-y divide-border shadow-[var(--shadow-xs)]">
           {STATUS.map((s) => (
             <div key={s.name} className="flex items-center gap-4 px-5 py-4">
@@ -268,7 +260,7 @@ export function ColorsPage() {
           Error. Sunset <span className="font-mono">#FF6847</span> stays for heat/energy
           data; the alert is now a truer red.
         </p>
-        <div className="mt-4">
+        <div className="mt-4 mb-8">
           <EngineeringNote>
             <p className="mb-2">
               Status colors are currently raw Tailwind (<span className="font-mono">green-500</span>,{" "}
@@ -283,6 +275,19 @@ export function ColorsPage() {
               <li>--destructive #D63B30 (retune from orange) · -muted #FBE1DD · #8E2018</li>
             </ul>
           </EngineeringNote>
+        </div>
+
+        {/* — Structural — */}
+        <h3 className="font-formula text-[15px] font-medium text-fg-1 mb-1 capitalize">
+          Structural
+        </h3>
+        <p className="text-[12px] text-fg-2 mb-3 max-w-2xl">
+          Neutral UI tokens — quiet surfaces and hairlines. The same in every context.
+        </p>
+        <div className="rounded-xl border border-border bg-card px-5 shadow-[var(--shadow-xs)]">
+          {CONSTANT.map((t) => (
+            <TokenRow key={t.token} {...t} />
+          ))}
         </div>
       </Section>
 
