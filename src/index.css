@@ -1,0 +1,238 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Adamina&display=swap");
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ── PP Formula — display/heading face ────────────────────────────── */
+@font-face {
+  font-family: "PP Formula";
+  src: url("/fonts/PPFormula-NarrowLight.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PP Formula";
+  src: url("/fonts/PPFormula-NarrowSemibold.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PP Formula";
+  src: url("/fonts/PPFormula-NarrowSemiboldItalic.otf") format("opentype");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ===================================================================
+   DESIGN TOKENS — mirrors next-sense/...-building-intelligence-center
+   src/index.css. This is the single source of truth for the docs site.
+   =================================================================== */
+:root {
+  /* Semantic foundations (light mode — default in product) */
+  --background: oklch(0.9829 0.0105 106.5917);
+  --foreground: oklch(0.3835 0.0401 123.2566);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.3835 0.0401 123.2566);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.3835 0.0401 123.2566);
+  --primary: oklch(0.8418 0.066 234.0182);
+  --primary-foreground: oklch(0.9829 0.0105 106.5917);
+  --secondary: oklch(0.9557 0.0258 231.6108);
+  --secondary-foreground: oklch(0.3835 0.0401 123.2566);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: #e0f4ff;
+  --accent-foreground: oklch(0.3835 0.0401 123.2566);
+  --destructive: #d63b30; /* truer red (was orange-red oklch) — alert/error */
+  --destructive-foreground: oklch(1 0 0);
+  --destructive-muted: #fbe1dd; /* soft fill for error pills */
+  --destructive-muted-foreground: #8e2018;
+
+  /* Status / semantic — success & warning (alert/error = --destructive above) */
+  --success: #4f9d5b;
+  --success-foreground: #ffffff;
+  --success-muted: #e7f3e9;
+  --success-muted-foreground: #2e6a39;
+  --warning: #e3a52b;
+  --warning-foreground: #ffffff;
+  --warning-muted: #faefd3;
+  --warning-muted-foreground: #855a12;
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+
+  /* Brand palette */
+  --brand-nimbus: #fafaf2;
+  --brand-verdure: #3f472f;
+  --brand-verdure-80: #484f3c;
+  --brand-verdure-60: #5c654d;
+  --brand-verdure-40: #afb2a4;
+  --brand-highlight: #e4abff;
+  --brand-haze: #e0f4ff;
+  --brand-sky: #a1d3f0;
+  --brand-twilight: #7096ad;
+  --brand-mist: #ffcfc5;
+  --brand-sunrise: #ffab9a;
+  --brand-sunset: #ff6847;
+  --brand-halo: #e5fb8c;
+  --brand-digital-sun: #d9ff41;
+  --brand-soil: #829246;
+
+  /* Level semantic tokens */
+  --portfolio-accent: var(--brand-sunrise);
+  --portfolio-border: var(--brand-sunrise);
+  --portfolio-hover-tint: #ffe8e3;
+  --building-accent: var(--brand-sky);
+  --building-border: var(--brand-sky);
+  --building-hover-tint: #eefaff;
+  --general-accent: var(--brand-verdure-80);
+  --assistant-accent: #f5fdd3; /* Digital Sun 4AM — AI Assistant surface strip */
+
+  /* Chart — Blue (cool / efficiency / comfort) — reworked for even, readable steps */
+  --chart-blue-1: #d2e7f4;
+  --chart-blue-2: #a1d3f0; /* Sky anchor */
+  --chart-blue-3: #74afd0;
+  --chart-blue-4: #4e86ae;
+  --chart-blue-5: #305c7c;
+  /* Chart — Red/Warm (energy / heat / alerts) */
+  --chart-red-1: #fcd4c8;
+  --chart-red-2: #fba993;
+  --chart-red-3: #ff6847; /* Sunset anchor */
+  --chart-red-4: #d6452c;
+  --chart-red-5: #a1301c;
+  /* Chart — Yellow/Green (solar / sustainability) — neon removed, even green ramp */
+  --chart-yellow-1: #ecf6a6;
+  --chart-yellow-2: #cbe05e;
+  --chart-yellow-3: #a6c13f;
+  --chart-yellow-4: #829246; /* Soil anchor */
+  --chart-yellow-5: #5e6b2a;
+
+  /* Foreground / background scale (Claude-style convenience) */
+  --fg-1: var(--brand-verdure);
+  --fg-2: oklch(0.556 0 0);
+  --fg-3: oklch(0.708 0 0);
+  --bg-1: var(--brand-nimbus);
+  --bg-2: #ffffff;
+  --bg-3: oklch(0.97 0 0);
+
+  /* Type */
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Adamina", ui-serif, Georgia, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-formula: "PP Formula", ui-sans-serif, sans-serif;
+
+  /* Radii */
+  --radius: 0.75rem;
+
+  /* Shadows — warm, cast from Verdure at ~10%, never pure black */
+  --shadow-2xs: 0 1px 3px 0px hsl(80 20.34% 23.14% / 0.05);
+  --shadow-xs: 0 1px 3px 0px hsl(80 20.34% 23.14% / 0.05);
+  --shadow-sm: 0 1px 3px 0px hsl(80 20.34% 23.14% / 0.1), 0 1px 2px -1px hsl(80 20.34% 23.14% / 0.1);
+  --shadow: 0 1px 3px 0px hsl(80 20.34% 23.14% / 0.1), 0 1px 2px -1px hsl(80 20.34% 23.14% / 0.1);
+  --shadow-md: 0 1px 3px 0px hsl(80 20.34% 23.14% / 0.1), 0 2px 4px -1px hsl(80 20.34% 23.14% / 0.1);
+  --shadow-lg: 0 1px 3px 0px hsl(80 20.34% 23.14% / 0.1), 0 4px 6px -1px hsl(80 20.34% 23.14% / 0.1);
+  --shadow-xl: 0 1px 3px 0px hsl(80 20.34% 23.14% / 0.1), 0 8px 10px -1px hsl(80 20.34% 23.14% / 0.1);
+  --shadow-2xl: 0 1px 3px 0px hsl(80 20.34% 23.14% / 0.25);
+}
+
+/* ── Level theming (matches product) ──────────────────────────────────
+   Portfolio → warm/salmon · Building → blue · General → Verdure 80 olive.
+   Toggling these classes on a preview wrapper re-tints --primary/--accent/
+   --ring so any shadcn component inside follows automatically. */
+.level-portfolio {
+  --primary: var(--brand-sunrise); /* #FFAB9A */
+  --primary-foreground: var(--foreground);
+  --secondary: var(--brand-mist); /* #FFCFC5 */
+  --secondary-foreground: var(--foreground);
+  --accent: var(--portfolio-hover-tint);
+  --accent-foreground: var(--foreground);
+  --ring: var(--brand-sunrise);
+}
+.level-building {
+  --primary: var(--brand-sky); /* #A1D3F0 */
+  --primary-foreground: var(--foreground);
+  --secondary: var(--brand-haze); /* #E0F4FF */
+  --secondary-foreground: var(--foreground);
+  --accent: var(--building-hover-tint);
+  --accent-foreground: var(--foreground);
+  --ring: var(--brand-sky);
+}
+.level-general {
+  --primary: var(--brand-verdure-60); /* #5C654D — Vendure 60 */
+  --primary-foreground: #ffffff;
+  --secondary: var(--brand-verdure-40); /* #AFB2A4 — Vendure 40 */
+  --secondary-foreground: var(--foreground);
+  --accent: #d6d7cf;
+  --accent-foreground: var(--foreground);
+  --ring: var(--brand-verdure-80);
+}
+
+/* AI Assistant — its own surface accent, not a navigation level. Mirrors the
+   product's [data-testid="chat-panel"] rules: --primary becomes Digital Sun,
+   the focus ring stays neutral grey on purpose (input must not glow yellow). */
+.context-assistant {
+  --primary: var(--brand-digital-sun); /* #D9FF41 */
+  --primary-foreground: var(--foreground);
+  --ring: var(--border);
+}
+
+/* ── Tailwind v4 theme mapping — expose tokens as utility classes ── */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-fg-1: var(--fg-1);
+  --color-fg-2: var(--fg-2);
+  --color-fg-3: var(--fg-3);
+  --color-bg-1: var(--bg-1);
+  --color-bg-2: var(--bg-2);
+  --color-bg-3: var(--bg-3);
+
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+  --font-formula: var(--font-formula);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background: var(--bg-1);
+    color: var(--fg-1);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+}
