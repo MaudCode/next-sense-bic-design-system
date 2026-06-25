@@ -6,7 +6,20 @@ import { Separator } from "@/components/ui/separator";
 
 const PRESETS = ["24h", "7d", "30d", "6M", "1Y"];
 
-function Bar({ crumbParent, crumbActive, backLabel }: { crumbParent: string; crumbActive: string; backLabel: string }) {
+const ACTIVE = "font-formula font-medium text-[15px] text-fg-1 border-b-2 border-primary pb-0.5";
+const MUTED = "text-fg-2";
+
+function Bar({
+  crumbLeft,
+  crumbRight,
+  activeSide,
+  backLabel,
+}: {
+  crumbLeft: string;
+  crumbRight: string;
+  activeSide: "left" | "right";
+  backLabel: string;
+}) {
   return (
     <div className="w-full">
       {/* breadcrumb row */}
@@ -16,9 +29,9 @@ function Bar({ crumbParent, crumbActive, backLabel }: { crumbParent: string; cru
         </Button>
         <Separator orientation="vertical" className="h-5" />
         <div className="flex items-center gap-2 text-[14px]">
-          <span className="text-fg-2">{crumbParent}</span>
+          <span className={activeSide === "left" ? ACTIVE : MUTED}>{crumbLeft}</span>
           <ChevronRight className="size-3.5 text-fg-3" />
-          <span className="font-medium text-fg-1 border-b-2 border-primary pb-0.5">{crumbActive}</span>
+          <span className={activeSide === "right" ? ACTIVE : MUTED}>{crumbRight}</span>
         </div>
       </div>
       {/* filter row */}
@@ -71,7 +84,7 @@ export function FilterBarPage() {
         description="The selected preset, the breadcrumb underline and the back-button border all follow the level primary (Sky here); hovers use the accent. Every control sits on the regular button radius — no pills. The bar sits on the page (Nimbus), not a white card."
       >
         <Preview center={false} className="level-building p-0 bg-[var(--bg-1)]">
-          <Bar crumbParent="Lighthouse" crumbActive="Aurora Tower" backLabel="Back to Lighthouse" />
+          <Bar crumbLeft="Lighthouse" crumbRight="Aurora Tower" activeSide="right" backLabel="Back to Lighthouse" />
         </Preview>
         <CodeBlock
           code={`<Button variant="accentOutline" size="sm"><ArrowLeft /> Back to Lighthouse</Button>
@@ -109,7 +122,7 @@ export function FilterBarPage() {
         description="The exact same bar at portfolio level — everything re-tints warm: the selected preset and back-button border become Sunrise, with no markup change."
       >
         <Preview center={false} className="level-portfolio p-0 bg-[var(--bg-1)]">
-          <Bar crumbParent="Lighthouse" crumbActive="All Buildings" backLabel="Back to All Buildings" />
+          <Bar crumbLeft="Lighthouse" crumbRight="All Buildings" activeSide="left" backLabel="Back to All Buildings" />
         </Preview>
       </Section>
     </>
