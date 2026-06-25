@@ -242,6 +242,14 @@ export function ChartsPage() {
           (heat/cool/electric); <span className="text-fg-1">Severity</span> for good→bad;{" "}
           <span className="text-fg-1">Categorical</span> for unordered “just different” series.
         </p>
+        <div className="mt-4">
+          <EngineeringNote>
+            The Categorical palette is <strong>new</strong> — today multi-series charts cycle the
+            ramp steps, so same-family series collide (Electric &amp; Photovoltaic both lime). Add
+            these distinct hues (Sky · Sunset · Soil · Twilight · Highlight · Amber) and use them for
+            unordered series so they stay distinguishable.
+          </EngineeringNote>
+        </div>
       </Section>
 
       <Section title="Donut" description="Composition of a whole — energy by use, sources, comfort. Center total and legend stay Verdure.">
