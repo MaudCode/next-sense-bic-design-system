@@ -84,10 +84,17 @@ const ASSISTANT_ROW = { name: "Assistant", cls: "context-assistant" };
  * Shows the same example three times — once per level — so the --primary /
  * --accent / --ring re-tint is explicit. Use on level-dependent sections.
  */
-export function LevelTriple({ children }: { children: ReactNode }) {
+export function LevelTriple({
+  children,
+  withAssistant = false,
+}: {
+  children: ReactNode;
+  withAssistant?: boolean;
+}) {
+  const rows = withAssistant ? [...LEVELS, ASSISTANT_ROW] : LEVELS;
   return (
-    <div className="grid sm:grid-cols-3 gap-3 mb-6">
-      {LEVELS.map((lvl) => (
+    <div className={cn("grid gap-3 mb-6", withAssistant ? "sm:grid-cols-4" : "sm:grid-cols-3")}>
+      {rows.map((lvl) => (
         <div
           key={lvl.cls}
           className={cn(

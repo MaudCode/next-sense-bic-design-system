@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { ArrowLeft, Plus } from "lucide-react";
 import { EngineeringNote, PageHeader, Section } from "@/components/docs";
 import { CodeBlock, Example, LevelStack, NotUsed, RefTable, Used } from "@/components/preview";
 import { Button } from "@/components/ui/button";
@@ -14,12 +14,13 @@ export function ButtonPage() {
 
       <Section
         title="Variants"
-        description="Every variant the component exposes, shown at each level — plus the AI Assistant context (Digital Sun). default, secondary and link follow the context; outline, ghost and destructive stay constant. Not all of these are used in the product today — see Usage below."
+        description="Every variant the component exposes, shown at each level — plus the AI Assistant context (Digital Sun). default, secondary, link and accentOutline follow the context (accentOutline's border = the level accent); outline, ghost and destructive stay constant. Not all of these are used in the product today — see Usage below."
       >
         <LevelStack withAssistant>
           <Button>Primary</Button>
           <Button variant="secondary">Secondary</Button>
           <Button variant="outline">Outline</Button>
+          <Button variant="accentOutline" className="rounded-full"><ArrowLeft /> Back</Button>
           <Button variant="ghost">Ghost</Button>
           <Button variant="link">Link</Button>
           <Button variant="destructive">Delete</Button>
@@ -30,6 +31,7 @@ export function ButtonPage() {
             code={`<Button>Primary</Button>
 <Button variant="secondary">Secondary</Button>
 <Button variant="outline">Outline</Button>
+<Button variant="accentOutline">Back</Button>   {/* border = level accent */}
 <Button variant="ghost">Ghost</Button>
 <Button variant="link">Link</Button>
 <Button variant="destructive">Delete</Button>`}
@@ -61,6 +63,13 @@ export function ButtonPage() {
                 <span className="font-mono">--accent</span> (#F5FDD3) and{" "}
                 <span className="font-mono">--secondary</span> (#E5FB8C), or outline
                 suggestion chips fall back to the base Haze <em>blue</em> on hover/click.
+              </li>
+              <li>
+                Add an <span className="font-mono">accentOutline</span> variant
+                (<span className="font-mono">border-primary</span>) and use it for the
+                "Back to…" button instead of the inline{" "}
+                <span className="font-mono">border-building-border</span> override — it
+                then re-tints to every context for free.
               </li>
             </ul>
           </EngineeringNote>
@@ -111,6 +120,7 @@ export function ButtonPage() {
           rows={[
             ["default", <Used key="d" />, "Primary action (level-tinted) — the implicit default, used most"],
             ["outline", <Used key="o" />, "Neutral, bordered — the workhorse variant"],
+            ["accentOutline", <Used key="ao" />, "Level-accent bordered pill — the building “Back to…” button (today an inline border override)"],
             ["ghost", <Used key="g" />, "Toolbar / inline action"],
             ["secondary", <NotUsed key="s" />, "Lower-emphasis action — defined, but only Badge uses secondary"],
             ["destructive", <NotUsed key="x" />, "Delete / irreversible — reserved, not yet used"],

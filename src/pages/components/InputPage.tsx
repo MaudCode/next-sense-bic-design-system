@@ -20,13 +20,13 @@ export function InputPage() {
 
       <Section
         title="Focus ring across levels"
-        description="The focus ring uses --ring, so it re-tints per level (Sunrise / Sky / Vendure 80). Shown here forced-on to compare the colors — in use it only appears on keyboard focus."
+        description="The focus ring uses --ring, so it re-tints per level (Sunrise / Sky / Vendure 80). The AI Assistant is the exception — its ring is a deliberate neutral grey (--ring = --border) so the chat input doesn't glow yellow. Shown forced-on to compare; in use it only appears on keyboard focus."
       >
-        <LevelTriple>
+        <LevelTriple withAssistant>
           <Input
             readOnly
             value="Focused"
-            className="w-40 border-ring ring-[3px] ring-ring/50"
+            className="w-full border-ring ring-[3px] ring-ring/50"
           />
         </LevelTriple>
       </Section>
