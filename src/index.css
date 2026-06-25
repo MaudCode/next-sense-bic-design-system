@@ -188,6 +188,13 @@
   --ring: var(--border);
 }
 
+/* Link buttons read --primary for their text — but Digital Sun text is
+   illegible on the off-white chat surface. Inside the assistant, render links
+   in the readable Vendure 60 (same as the General level's link). */
+.context-assistant [data-variant="link"] {
+  color: var(--brand-verdure-60);
+}
+
 /* ── Tailwind v4 theme mapping — expose tokens as utility classes ── */
 @theme inline {
   --color-background: var(--background);

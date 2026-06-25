@@ -63,6 +63,9 @@ export function ButtonPage() {
                 <span className="font-mono">--accent</span> (#F5FDD3) and{" "}
                 <span className="font-mono">--secondary</span> (#E5FB8C), or outline
                 suggestion chips fall back to the base Haze <em>blue</em> on hover/click.
+                Also override <span className="font-mono">link</span> text in the chat to
+                Vendure 60 <span className="font-mono">#5C654D</span> — Digital Sun text
+                is illegible on the off-white surface.
               </li>
               <li>
                 Add an <span className="font-mono">accentOutline</span> variant
