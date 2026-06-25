@@ -101,7 +101,7 @@ export function Swatch({
       className="group text-left rounded-xl border border-border bg-card overflow-hidden shadow-[var(--shadow-xs)] hover:shadow-[var(--shadow-md)] transition-shadow"
     >
       <div
-        className="h-20 flex items-end justify-between p-3 border-b border-border"
+        className="h-20 flex items-end justify-between p-3 border-b border-border rounded-t-xl"
         style={{ background: hex }}
       >
         <span
