@@ -97,7 +97,30 @@ const CATEGORY_MAP = {
     { cat: "Lighting · Solar PV", c: YELLOW[2], t: "yellow-3" },
   ],
 };
-const FALLBACK = [RED[0], BLUE[0], YELLOW[0], BLUE[2], YELLOW[2], RED[3], BLUE[1], RED[1], YELLOW[1]];
+// Categorical palette — distinct hues for unordered series (sources, buildings, tenants)
+const CATEGORICAL = [
+  { label: "Sky", c: "#A1D3F0" },
+  { label: "Sunset", c: "#FF6847" },
+  { label: "Soil", c: "#829246" },
+  { label: "Twilight", c: "#7096AD" },
+  { label: "Highlight", c: "#E4ABFF" },
+  { label: "Amber", c: "#E3A52B" },
+];
+
+// Energy Sources — a categorical chart (sources are "just different"), so it uses the
+// Categorical palette: Electric vs Photovoltaic are now distinct, not both lime.
+const SOURCES = [
+  { label: "Electric 48%", value: 48, color: "#A1D3F0" },
+  { label: "Photovoltaic 34%", value: 34, color: "#829246" },
+  { label: "Gas 12%", value: 12, color: "#FF6847" },
+  { label: "District 6%", value: 6, color: "#7096AD" },
+];
+
+// Bar with only the top corners rounded (radius-sm) — sits flat on the axis.
+function topRoundedPath(x: number, y: number, w: number, h: number, r = 3) {
+  const rr = Math.min(r, h, w / 2);
+  return `M${x},${y + h} L${x},${y + rr} Q${x},${y} ${x + rr},${y} L${x + w - rr},${y} Q${x + w},${y} ${x + w},${y + rr} L${x + w},${y + h} Z`;
+}
 
 const AREA = (() => {
   const w = 560, h = 170, n = 24;
@@ -219,26 +242,43 @@ export function ChartsPage() {
           ))}
         </div>
 
-        {/* (c) many series */}
-        <h3 className="font-formula text-[15px] font-medium text-fg-1 mb-1">Many series</h3>
+        {/* (c) categorical */}
+        <h3 className="font-formula text-[15px] font-medium text-fg-1 mb-1">Categorical — telling series apart</h3>
         <p className="text-[12px] text-fg-2 mb-3 max-w-2xl">
-          When a chart has more series than named colors (e.g. a 9-category stack), it walks
-          this fixed order — so a given series always keeps the same color across charts.
+          When categories are just “different things” (energy sources, buildings, tenants) and the
+          only job is to tell them apart, use these distinct hues — not shades of one family, which
+          blur together (Electric vs Photovoltaic both being lime is the symptom).
         </p>
-        <div className="flex items-center gap-2">
-          {FALLBACK.map((c, i) => (
-            <span key={i} className="w-7 h-7 rounded-lg border border-border" style={{ background: c }} />
+        <div className="flex flex-wrap gap-2.5">
+          {CATEGORICAL.map((s) => (
+            <div key={s.label} className="flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5">
+              <span className="w-3.5 h-3.5 rounded" style={{ background: s.c }} />
+              <span className="text-[12px] text-fg-1">{s.label}</span>
+            </div>
           ))}
         </div>
+        <p className="text-[11px] text-fg-2 mt-3">
+          Which one? <span className="text-fg-1">By meaning</span> when the category means something
+          (heat/cool/electric); <span className="text-fg-1">Severity</span> for good→bad;{" "}
+          <span className="text-fg-1">Categorical</span> for unordered “just different” series.
+        </p>
       </Section>
 
-      <Section title="Donut" description="Composition of a whole — energy by use, sources, comfort. Slices use the category map; center total and legend stay Verdure.">
-        <ChartCard title="Energy by Use" sub="By consumption type">
-          <div className="flex flex-wrap items-center gap-6">
-            <Donut slices={USE} total="174" unit="MWh" />
-            <Legend items={USE} />
-          </div>
-        </ChartCard>
+      <Section title="Donut" description="Composition of a whole — energy by use, sources, comfort. Center total and legend stay Verdure.">
+        <div className="grid lg:grid-cols-2 gap-3">
+          <ChartCard title="Energy by Use" sub="By meaning — each category its family color">
+            <div className="flex flex-wrap items-center gap-5">
+              <Donut slices={USE} total="174" unit="MWh" />
+              <Legend items={USE} />
+            </div>
+          </ChartCard>
+          <ChartCard title="Energy Sources" sub="Categorical — distinct hues so sources don't blur">
+            <div className="flex flex-wrap items-center gap-5">
+              <Donut slices={SOURCES} total="159" unit="MWh" />
+              <Legend items={SOURCES} />
+            </div>
+          </ChartCard>
+        </div>
       </Section>
 
       <Section title="Comfort categories" description="The CO₂ / temperature / humidity donuts. Bands use the good→bad severity scale; the centre % and legend stay Verdure.">
@@ -284,7 +324,7 @@ export function ChartsPage() {
               const weekend = i >= 5;
               return (
                 <g key={d.d}>
-                  <rect x={x} y={130 - bh} width="28" height={bh} rx="3" fill={weekend ? YELLOW[1] : YELLOW[3]} />
+                  <path d={topRoundedPath(x, 130 - bh, 28, bh)} fill={weekend ? YELLOW[1] : YELLOW[3]} />
                   <text x={x + 14} y={145} textAnchor="middle" fontSize="10" fill={INK} fontFamily="var(--font-sans)">{d.d}</text>
                 </g>
               );
@@ -305,7 +345,12 @@ export function ChartsPage() {
                   {col.vals.map((v, si) => {
                     const segH = (v / 100) * 120;
                     y -= segH;
-                    return <rect key={si} x={x} y={y} width={bw} height={segH} fill={STACK_CATS[si].color} />;
+                    const isTop = si === col.vals.length - 1;
+                    return isTop ? (
+                      <path key={si} d={topRoundedPath(x, y, bw, segH)} fill={STACK_CATS[si].color} />
+                    ) : (
+                      <rect key={si} x={x} y={y} width={bw} height={segH} fill={STACK_CATS[si].color} />
+                    );
                   })}
                   <text x={x + bw / 2} y={154} textAnchor="middle" fontSize="9" fill={INK} fontFamily="var(--font-sans)">{col.wk}</text>
                   <text x={x + bw / 2} y={134 - (totalV / 100) * 120} textAnchor="middle" fontSize="9" fill={INK} fontFamily="var(--font-mono)">{totalV}</text>
@@ -363,6 +408,46 @@ export function ChartsPage() {
               <TrendingDown size={13} /> −1.4% vs last period
             </div>
           </ChartCard>
+        </div>
+      </Section>
+
+      <Section title="Tooltip" description="One shared hover tooltip across every chart — a card with the point's label, then a swatch + name + value per series. Labels Verdure, values right-aligned mono.">
+        <div className="rounded-xl border border-border bg-[var(--bg-1)] p-8 flex justify-center">
+          <div className="w-72 rounded-xl border border-border bg-card shadow-[var(--shadow-lg)] p-3.5">
+            <div className="font-formula text-[13px] font-medium text-fg-1 mb-2">P1.RG04-05-06</div>
+            {[
+              { label: "Cold · <19°C", val: "0%", c: BLUE[4] },
+              { label: "Cool · 19–20°C", val: "0%", c: BLUE[1] },
+              { label: "Optimal · 20–24°C", val: "24%", c: YELLOW[1] },
+              { label: "Warm · 24–25°C", val: "33%", c: RED[1] },
+              { label: "Hot · >25°C", val: "44%", c: RED[3] },
+            ].map((r) => (
+              <div key={r.label} className="flex items-center gap-2 py-0.5 text-[12px]">
+                <span className="w-2.5 h-2.5 rounded-[3px] shrink-0" style={{ background: r.c }} />
+                <span className="text-fg-1">{r.label}</span>
+                <span className="ml-auto font-mono text-fg-1">{r.val}</span>
+              </div>
+            ))}
+            <div className="flex items-center gap-2 py-0.5 text-[12px] border-t border-border mt-1 pt-1.5">
+              <span className="w-2.5 h-2.5 rounded-full border-2 shrink-0" style={{ borderColor: INK }} />
+              <span className="text-fg-1">Average</span>
+              <span className="ml-auto font-mono text-fg-1">24.7°C</span>
+            </div>
+          </div>
+        </div>
+      </Section>
+
+      <Section title="Conventions">
+        <div className="rounded-xl border border-border bg-card p-5 shadow-[var(--shadow-xs)] text-[13px] leading-relaxed text-fg-2 space-y-2">
+          <p><span className="text-fg-1 font-medium">Bar corners.</span> Round the <strong>top corners only</strong> (radius-sm); the base sits flat on the axis. Stacked bars: segments square, only the top of the stack rounded. Single and stacked must match — don’t round one and not the other.</p>
+          <p><span className="text-fg-1 font-medium">Average / threshold markers.</span> Keep overlay markers small and low-contrast — a thin Verdure ring, not a heavy outline. They annotate; they shouldn’t compete with the bars.</p>
+          <p><span className="text-fg-1 font-medium">Tooltip.</span> Use the one shared tooltip above — never per-chart variants.</p>
+        </div>
+        <div className="mt-3">
+          <EngineeringNote>
+            Bar radius is inconsistent in code (some <span className="font-mono">radius={0}</span>,
+            some rounded) — standardize on top-rounded (radius-sm) so single and stacked bars match.
+          </EngineeringNote>
         </div>
       </Section>
 
