@@ -46,6 +46,7 @@ const LEVEL_AWARE = [
       { label: "Portfolio", hex: "#FFAB9A" },
       { label: "Building", hex: "#A1D3F0" },
       { label: "General", hex: "#5C654D" },
+      { label: "Assistant", hex: "#D9FF41" },
     ],
   },
   {
@@ -56,6 +57,7 @@ const LEVEL_AWARE = [
       { label: "Portfolio", hex: "#FFCFC5" },
       { label: "Building", hex: "#E0F4FF" },
       { label: "General", hex: "#AFB2A4" },
+      { label: "Assistant", hex: "#E5FB8C" },
     ],
   },
   {
@@ -66,6 +68,7 @@ const LEVEL_AWARE = [
       { label: "Portfolio", hex: "#FFE8E3" },
       { label: "Building", hex: "#EEFAFF" },
       { label: "General", hex: "#D6D7CF" },
+      { label: "Assistant", hex: "#F5FDD3" },
     ],
   },
   {
@@ -76,6 +79,7 @@ const LEVEL_AWARE = [
       { label: "Portfolio", hex: "#FFAB9A" },
       { label: "Building", hex: "#A1D3F0" },
       { label: "General", hex: "#484F3C" },
+      { label: "Assistant", hex: "#E5E5E5" },
     ],
   },
 ];
@@ -212,10 +216,12 @@ export function ColorsPage() {
           Level-aware
         </h3>
         <p className="text-[12px] text-fg-2 mb-3 max-w-2xl">
-          These four change with the active level — Portfolio (warm), Building (blue),
-          General (olive). One attribute on <span className="font-mono">&lt;html&gt;</span>{" "}
-          re-tints them and every button, ring and active state follows; see{" "}
-          <span className="font-medium">Levels</span> below for the live result.
+          These four change with the active context — Portfolio (warm), Building (blue),
+          General (olive), and the AI Assistant (Digital Sun). One attribute re-tints them
+          and every button, ring and active state follows; see{" "}
+          <span className="font-medium">Levels</span> and{" "}
+          <span className="font-medium">AI Assistant</span> below. (The Assistant keeps a
+          neutral grey ring on purpose, so the chat input doesn’t glow.)
         </p>
         <div className="rounded-xl border border-border bg-card px-5 shadow-[var(--shadow-xs)] mb-8">
           {LEVEL_AWARE.map((t) => (
@@ -369,7 +375,7 @@ export function ColorsPage() {
               {["Energy overview", "Comfort analysis", "Occupancy trends"].map((s) => (
                 <span
                   key={s}
-                  className="rounded-full bg-secondary text-secondary-foreground px-3 py-1 text-[12px] transition-colors hover:bg-secondary/80"
+                  className="rounded-full border border-primary bg-background text-fg-1 px-3 py-1 text-[12px] transition-colors hover:bg-accent"
                 >
                   {s}
                 </span>
@@ -382,7 +388,7 @@ export function ColorsPage() {
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
           <Swatch name="Digital Sun" hex="#D9FF41" token="--brand-digital-sun" usage="Send button & user bubbles (assistant --primary)" />
-          <Swatch name="Halo" hex="#E5FB8C" token="--brand-halo" usage="Suggestion chips (assistant --secondary)" />
+          <Swatch name="Halo" hex="#E5FB8C" token="--brand-halo" usage="Lower-emphasis fill (assistant --secondary)" />
           <Swatch name="Digital Sun 4AM" hex="#F5FDD3" token="--assistant-accent" usage="Header & footer strips; outline hover" />
         </div>
         <p className="text-[12px] text-fg-2 mt-3">
@@ -391,12 +397,12 @@ export function ColorsPage() {
         </p>
         <div className="mt-4">
           <EngineeringNote>
-            Suggestion chips should be the <span className="font-mono">secondary</span>{" "}
-            filled pill (Halo <span className="font-mono">#E5FB8C</span>, borderless) — not
-            a green-bordered <span className="font-mono">outline</span>. And remember the
-            chat panel must remap <span className="font-mono">--secondary</span> /{" "}
-            <span className="font-mono">--accent</span> (see Button) or these fall back to
-            the base blue.
+            Suggestion chips use the <span className="font-mono">accentOutline</span>{" "}
+            variant — a pill with the Digital Sun accent border (not a filled secondary,
+            not a flashy custom border). The chat panel must remap{" "}
+            <span className="font-mono">--secondary</span> /{" "}
+            <span className="font-mono">--accent</span> (see Button) so chip & outline
+            surfaces don’t fall back to the base blue.
           </EngineeringNote>
         </div>
       </Section>

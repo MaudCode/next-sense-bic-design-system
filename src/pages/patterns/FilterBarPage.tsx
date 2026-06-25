@@ -19,7 +19,7 @@ export function FilterBarPage() {
         title="Anatomy"
         description="Shown at Building level. The selected preset and the breadcrumb underline use the level accent; the back button uses the level-accent border (accentOutline). Every control sits on the regular button radius — no pills."
       >
-        <Preview center={false} className="level-building p-0">
+        <Preview center={false} className="level-building p-0 bg-[var(--bg-1)]">
           <div className="w-full">
             {/* breadcrumb row */}
             <div className="flex items-center gap-3 px-4 h-12 border-b border-border">
@@ -41,14 +41,19 @@ export function FilterBarPage() {
                 <ArrowLeft /> Back to Lighthouse
               </Button>
               <Separator orientation="vertical" className="h-6" />
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1.5">
                 {PRESETS.map((p) =>
-                  p === "1Y" ? (
-                    <Button key={p} size="sm" className="bg-accent text-accent-foreground hover:bg-accent">
+                  p === "30d" ? (
+                    <Button
+                      key={p}
+                      variant="outline"
+                      size="sm"
+                      className="bg-accent border-accent text-accent-foreground hover:bg-accent"
+                    >
                       {p}
                     </Button>
                   ) : (
-                    <Button key={p} variant="ghost" size="sm">
+                    <Button key={p} variant="outline" size="sm">
                       {p}
                     </Button>
                   ),
@@ -67,9 +72,10 @@ export function FilterBarPage() {
         <CodeBlock
           code={`<Button variant="accentOutline" size="sm"><ArrowLeft /> Back to Lighthouse</Button>
 
-{/* date presets — selected uses the level accent (bg-accent) */}
+{/* date presets — outline buttons; selected gets the level accent fill */}
 {["24h","7d","30d","6M","1Y"].map((p) => (
-  <Button key={p} variant={p === active ? undefined : "ghost"} size="sm">{p}</Button>
+  <Button key={p} variant="outline" size="sm"
+    className={p === active ? "bg-accent border-accent text-accent-foreground" : ""}>{p}</Button>
 ))}
 
 <Button variant="outline" size="sm"><Calendar /> Jun 25 – Jul 25</Button>

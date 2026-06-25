@@ -186,7 +186,7 @@ export function LevelTokenRow({
         </div>
         <div className="text-[12px] text-fg-2 text-right">{role}</div>
       </div>
-      <div className="grid grid-cols-3 gap-2.5">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
         {levels.map((l) => (
           <div key={l.label} className="flex items-center gap-2.5">
             <span
