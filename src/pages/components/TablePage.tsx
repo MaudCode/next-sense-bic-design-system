@@ -32,9 +32,12 @@ const BASE_ROWS = [
   { name: "Westgate 4", client: "Northwind Estates", area: "35,000", eui: "98.4" },
 ];
 
-// 20px inner padding, with the outer cells flush to it so column content lines
-// up with the widget header. Tint header + dividers inset, table fills the rest.
-const PAD = "px-5 [&_th:first-child]:pl-0 [&_td:first-child]:pl-0 [&_th:last-child]:pr-0 [&_td:last-child]:pr-0";
+// Card holds the table flush — header sits at the top edge (rounded via
+// overflow-hidden), no white band. Outer cells get 20px so column content lines
+// up with the widget's header padding; inner columns get a comfortable 12px.
+const CARD = "overflow-hidden rounded-xl border border-border bg-card shadow-[var(--shadow-xs)]";
+const CELLS = "[&_th]:px-3 [&_td]:px-3 [&_th:first-child]:pl-5 [&_td:first-child]:pl-5 [&_th:last-child]:pr-5 [&_td:last-child]:pr-5 [&_td]:py-2.5";
+const HEAD = "bg-muted hover:bg-muted";
 
 function HealthCell({ health }: { health: Health }) {
   const h = HEALTH[health];
@@ -93,12 +96,12 @@ export function TablePage() {
 
       <Section
         title="Base"
-        description="The table on its own: a tinted header row, hairline dividers, body text left, numbers tabular with a muted unit. It fills the width and sits on the widget's 20px inner padding."
+        description="The table on its own: a muted header row flush to the top of the card, hairline row dividers, body text left, numbers tabular with a muted unit. Column content sits on the 20px edge padding."
       >
-        <div className="rounded-xl border border-border bg-card py-5 shadow-[var(--shadow-xs)]">
-          <Table className={PAD}>
+        <div className={CARD}>
+          <Table className={CELLS}>
             <TableHeader>
-              <TableRow className="bg-[var(--brand-nimbus)] hover:bg-[var(--brand-nimbus)]">
+              <TableRow className={HEAD}>
                 <TableHead>Building</TableHead>
                 <TableHead>Client</TableHead>
                 <TableHead>Gross area (m²)</TableHead>
@@ -123,7 +126,7 @@ export function TablePage() {
         title="Example — portfolio breakdown"
         description="The same table composed into a widget: the Operational / Sustainability / Comfort switcher sits inline in the header, the building carries a muted code badge, and Connection Health colours the status label (Healthy / Degraded / Offline). Shown at Portfolio."
       >
-        <div className="level-portfolio overflow-hidden rounded-xl border border-border bg-card pb-5 shadow-[var(--shadow-xs)]">
+        <div className={cn("level-portfolio", CARD)}>
           <div className="flex items-start justify-between gap-4 p-5">
             <div>
               <h3 className="font-formula text-[22px] font-medium text-fg-1">Portfolio Breakdown</h3>
@@ -136,9 +139,9 @@ export function TablePage() {
               </button>
             </div>
           </div>
-          <Table className={PAD}>
+          <Table className={CELLS}>
             <TableHeader>
-              <TableRow className="bg-[var(--brand-nimbus)] hover:bg-[var(--brand-nimbus)]">
+              <TableRow className={HEAD}>
                 <TableHead>Building</TableHead>
                 <TableHead>Client</TableHead>
                 <TableHead>Connection Health</TableHead>
