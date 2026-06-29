@@ -25,6 +25,17 @@ const ROWS: { code: string; name: string; client: string; health: Health; ecm: n
   { code: "PRKS02", name: "Parkside 2", client: "Northwind Estates", health: "healthy", ecm: 1, saving: "5,000" },
 ];
 
+const BASE_ROWS = [
+  { name: "Riverside Mews", client: "Northwind Estates", area: "12,500", eui: "135.2" },
+  { name: "Maple Court 12", client: "Northwind Estates", area: "28,000", eui: "168.7" },
+  { name: "Harbour Point", client: "Aurora Property", area: "22,400", eui: "112.3" },
+  { name: "Westgate 4", client: "Northwind Estates", area: "35,000", eui: "98.4" },
+];
+
+// 20px inner padding, with the outer cells flush to it so column content lines
+// up with the widget header. Tint header + dividers inset, table fills the rest.
+const PAD = "px-5 [&_th:first-child]:pl-0 [&_td:first-child]:pl-0 [&_th:last-child]:pr-0 [&_td:last-child]:pr-0";
+
 function HealthCell({ health }: { health: Health }) {
   const h = HEALTH[health];
   return (
@@ -81,10 +92,38 @@ export function TablePage() {
       />
 
       <Section
-        title="Example — portfolio breakdown"
-        description="A table composed into a widget: the Operational / Sustainability / Comfort switcher sits inline in the header, the building carries a muted code badge, and Connection Health colours the status label (Healthy / Degraded / Offline). Shown at Portfolio."
+        title="Base"
+        description="The table on its own: a tinted header row, hairline dividers, body text left, numbers tabular with a muted unit. It fills the width and sits on the widget's 20px inner padding."
       >
-        <div className="level-portfolio overflow-hidden rounded-xl border border-border bg-card shadow-[var(--shadow-xs)]">
+        <div className="rounded-xl border border-border bg-card py-5 shadow-[var(--shadow-xs)]">
+          <Table className={PAD}>
+            <TableHeader>
+              <TableRow className="bg-[var(--brand-nimbus)] hover:bg-[var(--brand-nimbus)]">
+                <TableHead>Building</TableHead>
+                <TableHead>Client</TableHead>
+                <TableHead>Gross area (m²)</TableHead>
+                <TableHead>EUI (kWh/m²)</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {BASE_ROWS.map((r) => (
+                <TableRow key={r.name}>
+                  <TableCell className="font-medium text-fg-1">{r.name}</TableCell>
+                  <TableCell className="text-fg-2">{r.client}</TableCell>
+                  <TableCell className="tabular-nums text-fg-1">{r.area}</TableCell>
+                  <TableCell className="tabular-nums text-fg-1">{r.eui}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </Section>
+
+      <Section
+        title="Example — portfolio breakdown"
+        description="The same table composed into a widget: the Operational / Sustainability / Comfort switcher sits inline in the header, the building carries a muted code badge, and Connection Health colours the status label (Healthy / Degraded / Offline). Shown at Portfolio."
+      >
+        <div className="level-portfolio overflow-hidden rounded-xl border border-border bg-card pb-5 shadow-[var(--shadow-xs)]">
           <div className="flex items-start justify-between gap-4 p-5">
             <div>
               <h3 className="font-formula text-[22px] font-medium text-fg-1">Portfolio Breakdown</h3>
@@ -97,7 +136,7 @@ export function TablePage() {
               </button>
             </div>
           </div>
-          <Table>
+          <Table className={PAD}>
             <TableHeader>
               <TableRow className="bg-[var(--brand-nimbus)] hover:bg-[var(--brand-nimbus)]">
                 <TableHead>Building</TableHead>
