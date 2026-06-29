@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 import { EngineeringNote, PageHeader, Section } from "@/components/docs";
 import { Preview, CodeBlock, LevelTriple } from "@/components/preview";
 import { Button } from "@/components/ui/button";
@@ -23,14 +24,71 @@ function DatePresets() {
   );
 }
 
+/** The pill-container segmented control — a level-tinted active segment on a
+    Nimbus track. Built to the Figma spec: track radius 10 (rounded-md), 2px
+    padding, 1px border; active segment radius 8 (rounded-sm), bg = --secondary
+    (the level tint: Mist / Haze / Vendure 40). */
+const SWITCHER = ["Operational", "Sustainability", "Comfort"];
+
+function SectionSwitcher() {
+  const [value, setValue] = useState("Operational");
+  return (
+    <div className="inline-flex items-center gap-1 rounded-md border border-border bg-[var(--brand-nimbus)] p-0.5">
+      {SWITCHER.map((s) => (
+        <button
+          key={s}
+          onClick={() => setValue(s)}
+          className={cn(
+            "rounded-sm px-2.5 py-1 font-formula text-[15px] font-medium transition-colors",
+            value === s
+              ? "bg-secondary text-secondary-foreground"
+              : "text-fg-3 hover:text-fg-1",
+          )}
+        >
+          {s}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export function SegmentedControlPage() {
   return (
     <>
       <PageHeader
         eyebrow="Components"
         title="Segmented Control"
-        lead="A row of options where you pick exactly one and it stays selected — used to set a value or filter for content that's already on screen, like the date-range presets. It's not a separate component: it's a row of Buttons where the selected one is variant=default (primary) and the rest are outline. Same buttons as the filter bar."
+        lead="A row of options where you pick exactly one and it stays selected. BIC uses two forms: a compact pill container with a level-tinted active segment — the Operational / Sustainability / Comfort switcher — and a row of buttons for the date-range presets. Pick one; the rest sit quiet."
       />
+
+      <Section
+        title="Pill container — section switcher"
+        description="Shown at Portfolio. A Nimbus track holds the segments; the active one is a pill filled with the level's --secondary tint (Mist here), dark label. PP Formula labels. Track radius 10 (rounded-md), active radius 8 (rounded-sm), 2px track padding."
+      >
+        <Preview className="level-portfolio"><SectionSwitcher /></Preview>
+        <CodeBlock
+          code={`const [tab, setTab] = useState("Operational")
+
+<div className="inline-flex gap-1 rounded-md border bg-[var(--brand-nimbus)] p-0.5">
+  {["Operational","Sustainability","Comfort"].map((s) => (
+    <button key={s} onClick={() => setTab(s)}
+      className={cn("rounded-sm px-2.5 py-1 font-formula text-[15px] font-medium",
+        tab === s ? "bg-secondary text-secondary-foreground" : "text-fg-3 hover:text-fg-1")}>
+      {s}
+    </button>
+  ))}
+</div>`}
+        />
+      </Section>
+
+      <Section
+        title="Section switcher across levels"
+        description="The active segment is bg-secondary, so it follows the level — Mist (Portfolio), Haze (Building), Vendure 40 (General)."
+      >
+        <LevelTriple>
+          <SectionSwitcher />
+        </LevelTriple>
+      </Section>
 
       <Section
         title="Tabs or Segmented Control?"
@@ -83,6 +141,17 @@ export function SegmentedControlPage() {
       </Section>
 
       <Section title="Usage">
+        <div className="mb-4">
+          <EngineeringNote>
+            <span className="font-medium">Pill-container switcher:</span> track ={" "}
+            <span className="font-mono">bg-[var(--brand-nimbus)]</span>, 1px border, radius
+            10 (<span className="font-mono">rounded-md</span>), 2px padding. Active segment ={" "}
+            <span className="font-mono">bg-secondary</span> (the level tint — Mist / Haze /
+            Vendure 40), dark label, radius 8 (<span className="font-mono">rounded-sm</span>),
+            padding <span className="font-mono">2px 8px</span>. Drive selection in JS — it's
+            single-select, like Tabs but for re-slicing the same view.
+          </EngineeringNote>
+        </div>
         <EngineeringNote>
           <ul className="list-disc pl-4 space-y-1">
             <li>
