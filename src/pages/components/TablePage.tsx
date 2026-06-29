@@ -2,7 +2,6 @@ import { Wifi, WifiOff, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { EngineeringNote, PageHeader, Section } from "@/components/docs";
-import { CodeBlock } from "@/components/preview";
 import { Badge } from "@/components/ui/badge";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
@@ -36,7 +35,11 @@ const BASE_ROWS = [
 // overflow-hidden), no white band. Outer cells get 20px so column content lines
 // up with the widget's header padding; inner columns get a comfortable 12px.
 const CARD = "overflow-hidden rounded-xl border border-border bg-card shadow-[var(--shadow-xs)]";
+// Base table: full-bleed header, content padded to 20px (the ECM-table look).
 const CELLS = "[&_th]:px-3 [&_td]:px-3 [&_th:first-child]:pl-5 [&_td:first-child]:pl-5 [&_th:last-child]:pr-5 [&_td:last-child]:pr-5 [&_td]:py-2.5";
+// Widget table: wrapped in px-5 so the tint header + dividers inset to the widget
+// padding; outer cells flush so columns line up with the title.
+const WIDGET_CELLS = "[&_th]:px-3 [&_td]:px-3 [&_th:first-child]:pl-0 [&_td:first-child]:pl-0 [&_th:last-child]:pr-0 [&_td:last-child]:pr-0 [&_td]:py-3.5";
 const HEAD = "bg-muted hover:bg-muted";
 
 function HealthCell({ health }: { health: Health }) {
@@ -66,24 +69,6 @@ function InlineSwitcher() {
     </div>
   );
 }
-
-const CODE = `<TableRow>
-  <TableCell>
-    <span className="font-medium text-fg-1">{r.name}</span>
-    <Badge variant="muted">{r.code}</Badge>
-  </TableCell>
-  <TableCell className="text-fg-2">{r.client}</TableCell>
-  <TableCell>
-    {/* status colour on the label — success / warning / destructive */}
-    <span style={{ color: health.color }} className="inline-flex items-center gap-2 font-medium">
-      <health.Icon size={16} /> {health.label}
-    </span>
-  </TableCell>
-  <TableCell className="tabular-nums">{r.ecm}</TableCell>
-  <TableCell className="tabular-nums">
-    {r.saving} <span className="text-fg-2">kWh</span>
-  </TableCell>
-</TableRow>`;
 
 export function TablePage() {
   return (
@@ -139,37 +124,38 @@ export function TablePage() {
               </button>
             </div>
           </div>
-          <Table className={CELLS}>
-            <TableHeader>
-              <TableRow className={HEAD}>
-                <TableHead>Building</TableHead>
-                <TableHead>Client</TableHead>
-                <TableHead>Connection Health</TableHead>
-                <TableHead>Open ECM</TableHead>
-                <TableHead>Potential Saving</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {ROWS.map((r) => (
-                <TableRow key={r.code}>
-                  <TableCell>
-                    <span className="inline-flex items-center gap-2">
-                      <span className="font-medium text-fg-1">{r.name}</span>
-                      <Badge variant="muted">{r.code}</Badge>
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-fg-2">{r.client}</TableCell>
-                  <TableCell><HealthCell health={r.health} /></TableCell>
-                  <TableCell className="tabular-nums text-fg-1">{r.ecm}</TableCell>
-                  <TableCell className="tabular-nums text-fg-1">
-                    {r.saving} <span className="text-fg-2">kWh</span>
-                  </TableCell>
+          <div className="px-5 pb-5">
+            <Table className={WIDGET_CELLS}>
+              <TableHeader>
+                <TableRow className={HEAD}>
+                  <TableHead>Building</TableHead>
+                  <TableHead>Client</TableHead>
+                  <TableHead>Connection Health</TableHead>
+                  <TableHead>Open ECM</TableHead>
+                  <TableHead>Potential Saving</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {ROWS.map((r) => (
+                  <TableRow key={r.code}>
+                    <TableCell>
+                      <span className="inline-flex items-center gap-2">
+                        <span className="font-medium text-fg-1">{r.name}</span>
+                        <Badge variant="muted">{r.code}</Badge>
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-fg-2">{r.client}</TableCell>
+                    <TableCell><HealthCell health={r.health} /></TableCell>
+                    <TableCell className="tabular-nums text-fg-1">{r.ecm}</TableCell>
+                    <TableCell className="tabular-nums text-fg-1">
+                      {r.saving} <span className="text-fg-2">kWh</span>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
-        <CodeBlock code={CODE} />
         <div className="mt-4">
           <EngineeringNote>
             Connection Health colours the <span className="font-medium">label</span>, not a pill —{" "}
