@@ -53,7 +53,7 @@ const TEXT: Row[] = [
   { name: "Body", spec: "Instrument Sans · 14 / 1.5", role: "Default reading text and the breadcrumb.", code: "text-sm", status: "ok", text: "Instrument Sans is the body face used across the product.", style: sans(14, { lineHeight: 1.5 }) },
   { name: "Subtitle", spec: "Instrument Sans · 12", role: "Secondary line under a title, and text inside tables.", code: "text-xs", status: "ok", text: "Showing all hours — click for business hours", style: sans(12, { lineHeight: 1.45, color: "var(--fg-2)" }) },
   { name: "Label", spec: "Instrument Sans · 12 · 500", role: "Field labels and metric captions.", code: "text-xs font-medium", status: "ok", text: "Avg Temperature", style: sans(12, { fontWeight: 500, color: "var(--fg-2)" }) },
-  { name: "Eyebrow", spec: "Instrument Sans · 12 · uppercase", role: "Overline above a title or section, and small period / metric labels (e.g. “Last 24 hours”, “Area Used”).", code: "Mixed: text-xs (12) in panels, text-[10px] in widgets", status: "refine", text: "Last 24 hours", style: sans(12, { fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--fg-2)" }) },
+  { name: "Eyebrow", spec: "Instrument Sans · 10 · uppercase", role: "Overline above a title or section, and small period / metric labels (e.g. “Last 24 hours”, “Area Used”). Caps + tracking carry the weight, so it stays small.", code: "text-[10px] (widgets) / text-xs in panels", status: "refine", text: "Last 24 hours", style: sans(10, { fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--fg-2)" }) },
   { name: "Mono", spec: "Mono · 12", role: "Deltas, codes and token values.", code: "font-mono text-xs", status: "ok", text: "+3.2% vs last period", style: { fontFamily: "var(--font-mono)", fontSize: 12 } },
 ];
 
@@ -169,12 +169,14 @@ export function TypographyPage() {
             new step with no usage yet — reserve it for lead copy.
           </EngineeringNote>
           <EngineeringNote>
-            <span className="font-medium">Overlines should be one size — 12 (text-base's smaller sibling, text-xs).</span>{" "}
-            Today they're split: AI panels use <span className="font-mono">text-xs</span>{" "}
-            (12) while small widget labels (e.g. “Area Used”) use{" "}
-            <span className="font-mono">text-[10px]</span>. Standardise every uppercase
-            overline on <span className="font-mono">text-xs</span> and drop the arbitrary
-            10px — it's off-scale and the least legible size for caps.
+            <span className="font-medium">Overlines should be one size — 10.</span>{" "}
+            Today they're split: small widget labels (e.g. “Area Used”) use{" "}
+            <span className="font-mono">text-[10px]</span> while AI panels use{" "}
+            <span className="font-mono">text-xs</span> (12). Standardise every uppercase
+            overline on <span className="font-mono">10px</span> — at 12 the caps read too
+            heavy next to a sentence-case label of the same size. Worth giving it a real
+            token (e.g. <span className="font-mono">--text-2xs</span>) rather than a one-off
+            <span className="font-mono"> text-[10px]</span>.
           </EngineeringNote>
           <EngineeringNote>
             <span className="font-medium">There's no shared heading helper.</span> Sizes are set
