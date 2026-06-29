@@ -378,22 +378,22 @@ export function ChartsPage() {
         </ChartCard>
       </Section>
 
-      <Section title="KPI & metric card" description="A single headline number — big and Verdure. A delta may be colored, but only in a dark status shade (never a light tint).">
+      <Section title="KPI & metric card" description="A single headline number — big and Verdure. The delta is coloured text only: the trend icon + % sit in a dark status shade (success green up, destructive red down) while “vs last period” stays muted. Never a filled green/red band or a light tint.">
         <div className="grid sm:grid-cols-2 gap-3">
           <ChartCard title="Total Power" sub="last 30 days">
             <div className="font-formula text-[40px] font-medium leading-none" style={{ color: INK }}>
               2,450 <span className="text-[16px] text-fg-2">kWh</span>
             </div>
-            <div className="inline-flex items-center gap-1 text-[12px] mt-2" style={{ color: "#2E6A39" }}>
-              <TrendingUp size={13} /> +3.2% vs last period
+            <div className="inline-flex items-center gap-1 text-[12px] mt-2" style={{ color: "var(--success-muted-foreground)" }}>
+              <TrendingUp size={13} /> +3.2% <span className="text-fg-2">vs last period</span>
             </div>
           </ChartCard>
           <ChartCard title="Energy Load" sub="last 30 days">
             <div className="font-formula text-[40px] font-medium leading-none" style={{ color: INK }}>
               184.3 <span className="text-[16px] text-fg-2">kW</span>
             </div>
-            <div className="inline-flex items-center gap-1 text-[12px] mt-2" style={{ color: "#8E2018" }}>
-              <TrendingDown size={13} /> −1.4% vs last period
+            <div className="inline-flex items-center gap-1 text-[12px] mt-2" style={{ color: "var(--destructive-muted-foreground)" }}>
+              <TrendingDown size={13} /> −1.4% <span className="text-fg-2">vs last period</span>
             </div>
           </ChartCard>
         </div>
