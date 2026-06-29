@@ -61,6 +61,42 @@ export function BadgePage() {
       </Section>
 
       <Section
+        title="Status"
+        description="Soft-filled pills for state — connection health, severity, system status. Each uses a status colour at its tint: a muted fill with the darker tone as text, so it reads clearly on a white card without shouting. Level-agnostic — status means the same thing in every context."
+      >
+        <div className="rounded-xl border border-border bg-card p-6 shadow-[var(--shadow-xs)] flex flex-wrap items-center gap-2.5">
+          <Badge variant="success">Healthy</Badge>
+          <Badge variant="warning">Degraded</Badge>
+          <Badge variant="error">Connection loss</Badge>
+        </div>
+        <div className="mt-3">
+          <CodeBlock
+            standalone
+            code={`<Badge variant="success">Healthy</Badge>
+<Badge variant="warning">Degraded</Badge>
+<Badge variant="error">Connection loss</Badge>`}
+          />
+        </div>
+        <div className="mt-4">
+          <EngineeringNote>
+            Add three soft status variants to{" "}
+            <span className="font-mono">badge.tsx</span>, each a{" "}
+            <span className="font-mono">-muted</span> fill + foreground:{" "}
+            <span className="font-mono">success</span> (
+            <span className="font-mono">bg-success-muted text-success-muted-foreground</span>),{" "}
+            <span className="font-mono">warning</span>, and{" "}
+            <span className="font-mono">error</span> (
+            <span className="font-mono">--destructive-muted</span>). Connection-health
+            components currently use raw Tailwind (
+            <span className="font-mono">green-500 / orange-500 / red-500</span>) — point
+            them at these instead. Severity maps as on Colors: Healthy → success, Partially
+            degraded → warning, Highly degraded → Sunset, Connection loss → error. Solid{" "}
+            <span className="font-mono">destructive</span> stays for hard alerts.
+          </EngineeringNote>
+        </div>
+      </Section>
+
+      <Section
         title="Usage"
         description="What the variants are for, and whether they actually appear in the product today (counted across the BIC codebase)."
       >
@@ -71,7 +107,8 @@ export function BadgePage() {
             ["secondary", <Used key="s" />, "Neutral category / count chip (e.g. portfolio & ECM counts)"],
             ["default", <Used key="d" />, "Active / selected (level-tinted) — used sparingly"],
             ["muted", <NotUsed key="m" />, "Grey identifier tag (building codes) — in the design, proposed for code"],
-            ["destructive", <NotUsed key="x" />, "Alert / error — defined, not yet used"],
+            ["destructive", <NotUsed key="x" />, "Solid alert / error — defined, not yet used"],
+            ["success / warning / error", <NotUsed key="st" />, "Soft status pills (connection health, severity) — proposed for code"],
           ]}
         />
         <p className="text-[11px] text-fg-2 mt-3">
