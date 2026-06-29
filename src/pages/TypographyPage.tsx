@@ -48,6 +48,8 @@ const HEADINGS: Row[] = [
 ];
 
 const TEXT: Row[] = [
+  { name: "Body XL", spec: "Instrument Sans · 18", role: "Lead-in line or emphasised intro copy, where body text needs to carry a little more weight.", code: "text-lg — no current use", status: "new", text: "Buildings, awake — the whole portfolio at a glance.", style: sans(18, { lineHeight: 1.45 }) },
+  { name: "Body L", spec: "Instrument Sans · 16", role: "The unit beside a big callout number (kWh/m², %, °C), and lead / emphasis copy.", code: "Units currently text-sm (14)", status: "refine", text: "57.8 kWh/m²", style: sans(16, { lineHeight: 1.4 }) },
   { name: "Body", spec: "Instrument Sans · 14 / 1.5", role: "Default reading text and the breadcrumb.", code: "text-sm", status: "ok", text: "Instrument Sans is the body face used across the product.", style: sans(14, { lineHeight: 1.5 }) },
   { name: "Subtitle", spec: "Instrument Sans · 12", role: "Secondary line under a title, and text inside tables.", code: "text-xs", status: "ok", text: "Showing all hours — click for business hours", style: sans(12, { lineHeight: 1.45, color: "var(--fg-2)" }) },
   { name: "Label", spec: "Instrument Sans · 12 · 500", role: "Field labels and metric captions.", code: "text-xs font-medium", status: "ok", text: "Avg Temperature", style: sans(12, { fontWeight: 500, color: "var(--fg-2)" }) },
@@ -155,6 +157,16 @@ export function TypographyPage() {
             <span className="font-mono">Metric = 24</span> (the standard in-widget KPI) and{" "}
             <span className="font-mono">Display = 40</span> (the single hero number), plus{" "}
             <span className="font-mono">H1 = 28</span> for display-style heading text.
+          </EngineeringNote>
+          <EngineeringNote>
+            <span className="font-medium">Metric units should sit at 16 (text-base).</span>{" "}
+            The unit beside a headline number (e.g.{" "}
+            <span className="font-mono">kWh/m²</span> in the EUI widget) is currently{" "}
+            <span className="font-mono">text-sm</span> (14) —{" "}
+            <span className="font-mono">energy-use-intensity.tsx</span>. Bump it to{" "}
+            <span className="font-mono">text-base</span> (Body L) so it pairs cleanly with
+            the big number. <span className="font-mono">text-lg</span> (Body XL, 18) is a
+            new step with no usage yet — reserve it for lead copy.
           </EngineeringNote>
           <EngineeringNote>
             <span className="font-medium">There's no shared heading helper.</span> Sizes are set
