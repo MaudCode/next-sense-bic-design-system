@@ -39,9 +39,9 @@ function SectionSwitcher() {
           key={s}
           onClick={() => setValue(s)}
           className={cn(
-            "rounded-sm px-2.5 py-1 font-formula text-[15px] font-medium transition-colors",
+            "rounded-sm px-2.5 py-1 text-sm font-medium transition-colors",
             value === s
-              ? "bg-secondary text-secondary-foreground"
+              ? "bg-primary text-primary-foreground"
               : "text-fg-3 hover:text-fg-1",
           )}
         >
@@ -63,7 +63,7 @@ export function SegmentedControlPage() {
 
       <Section
         title="Pill container — section switcher"
-        description="Shown at Portfolio. A Nimbus track holds the segments; the active one is a pill filled with the level's --secondary tint (Mist here), dark label. PP Formula labels. Track radius 10 (rounded-md), active radius 8 (rounded-sm), 2px track padding."
+        description="Shown at Portfolio. A Nimbus track holds the segments; the active one is a pill filled with --primary (Sunrise here), so selection reads the same as everywhere else in BIC. Body (Instrument Sans) labels. Track radius 10 (rounded-md), active radius 8 (rounded-sm), 2px track padding."
       >
         <Preview className="level-portfolio"><SectionSwitcher /></Preview>
         <CodeBlock
@@ -72,8 +72,8 @@ export function SegmentedControlPage() {
 <div className="inline-flex gap-1 rounded-md border bg-[var(--brand-nimbus)] p-0.5">
   {["Operational","Sustainability","Comfort"].map((s) => (
     <button key={s} onClick={() => setTab(s)}
-      className={cn("rounded-sm px-2.5 py-1 font-formula text-[15px] font-medium",
-        tab === s ? "bg-secondary text-secondary-foreground" : "text-fg-3 hover:text-fg-1")}>
+      className={cn("rounded-sm px-2.5 py-1 text-sm font-medium",
+        tab === s ? "bg-primary text-primary-foreground" : "text-fg-3 hover:text-fg-1")}>
       {s}
     </button>
   ))}
@@ -83,7 +83,7 @@ export function SegmentedControlPage() {
 
       <Section
         title="Section switcher across levels"
-        description="The active segment is bg-secondary, so it follows the level — Mist (Portfolio), Haze (Building), Vendure 40 (General)."
+        description="The active segment is bg-primary, so it follows the level — Sunrise (Portfolio), Sky (Building), Vendure 60 (General)."
       >
         <LevelTriple>
           <SectionSwitcher />
@@ -146,9 +146,10 @@ export function SegmentedControlPage() {
             <span className="font-medium">Pill-container switcher:</span> track ={" "}
             <span className="font-mono">bg-[var(--brand-nimbus)]</span>, 1px border, radius
             10 (<span className="font-mono">rounded-md</span>), 2px padding. Active segment ={" "}
-            <span className="font-mono">bg-secondary</span> (the level tint — Mist / Haze /
-            Vendure 40), dark label, radius 8 (<span className="font-mono">rounded-sm</span>),
-            padding <span className="font-mono">2px 8px</span>. Drive selection in JS — it's
+            <span className="font-mono">bg-primary</span> (the level color — Sunrise / Sky /
+            Vendure 60), label = body font + <span className="font-mono">text-primary-foreground</span>,
+            radius 8 (<span className="font-mono">rounded-sm</span>), padding{" "}
+            <span className="font-mono">2px 8px</span>. Drive selection in JS — it's
             single-select, like Tabs but for re-slicing the same view.
           </EngineeringNote>
         </div>
