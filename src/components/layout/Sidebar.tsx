@@ -24,7 +24,11 @@ export function Sidebar() {
     <aside className="level-general hidden md:flex w-64 shrink-0 flex-col border-r border-border bg-[var(--brand-nimbus)] h-screen sticky top-0">
       {/* Brand */}
       <div className="px-5 pt-5 pb-4">
-        <img src="/assets/logo-full.svg" alt="Next Sense" className="h-5 w-auto" />
+        <img
+          src={`${import.meta.env.BASE_URL}assets/logo-full.svg`}
+          alt="Next Sense"
+          className="h-5 w-auto"
+        />
         <div className="mt-1.5 text-[11px] text-fg-2">Design System</div>
       </div>
 
@@ -38,18 +42,12 @@ export function Sidebar() {
         {NAV.map((group) => {
           const Icon = group.icon;
           const isOpen = open[group.title];
-          const groupActive = group.items.some((i) => i.path === pathname);
           return (
             <div key={group.title}>
               <button
                 type="button"
                 onClick={() => toggle(group.title)}
-                className={cn(
-                  "w-full flex items-center gap-2.5 rounded-md px-2.5 py-2 transition-colors",
-                  groupActive && !isOpen
-                    ? "bg-accent"
-                    : "hover:bg-accent",
-                )}
+                className="w-full flex items-center gap-2.5 rounded-md px-2.5 py-2 text-left"
               >
                 <Icon size={17} className="text-fg-2 shrink-0" strokeWidth={1.8} />
                 <span className="font-formula text-[15px] font-medium text-fg-1">
@@ -73,7 +71,7 @@ export function Sidebar() {
                       end={item.path === "/"}
                       className={({ isActive }) =>
                         cn(
-                          "flex items-center justify-between rounded-full px-3 py-1.5 font-sans text-[14px] transition-colors",
+                          "flex items-center justify-between rounded-md px-3 py-1.5 font-sans text-[14px] transition-colors",
                           isActive
                             ? "bg-primary text-primary-foreground font-medium"
                             : "text-fg-2 font-normal hover:bg-accent hover:text-accent-foreground",
