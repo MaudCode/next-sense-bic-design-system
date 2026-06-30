@@ -72,8 +72,8 @@ export function Sidebar() {
                         cn(
                           "flex h-7 items-center justify-between rounded-md px-2.5 font-sans text-[14px] transition-colors",
                           isActive
-                            ? "bg-accent text-accent-foreground font-medium"
-                            : "text-fg-2 font-normal hover:bg-accent/60 hover:text-accent-foreground",
+                            ? "bg-[var(--brand-verdure-80)] text-white font-medium"
+                            : "text-fg-2 font-normal hover:bg-accent hover:text-accent-foreground",
                         )
                       }
                     >
