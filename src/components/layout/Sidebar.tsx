@@ -32,8 +32,8 @@ export function Sidebar() {
         <div className="mt-1.5 text-[11px] text-fg-2">Design System</div>
       </div>
 
-      {/* Section label */}
-      <div className="px-5 pb-1 text-[11px] font-medium uppercase tracking-[0.08em] text-fg-2">
+      {/* Section label — matches BIC's "Platform" group label */}
+      <div className="px-5 pb-1 text-[12px] font-medium text-fg-2">
         Reference
       </div>
 
@@ -71,10 +71,10 @@ export function Sidebar() {
                       end={item.path === "/"}
                       className={({ isActive }) =>
                         cn(
-                          "flex items-center justify-between rounded-md px-3 py-1.5 font-sans text-[14px] transition-colors",
+                          "flex h-7 items-center justify-between rounded-md px-2.5 font-sans text-[14px] transition-colors",
                           isActive
-                            ? "bg-primary text-primary-foreground font-medium"
-                            : "text-fg-2 font-normal hover:bg-accent hover:text-accent-foreground",
+                            ? "bg-accent text-accent-foreground font-medium"
+                            : "text-fg-2 font-normal hover:bg-accent/60 hover:text-accent-foreground",
                         )
                       }
                     >
