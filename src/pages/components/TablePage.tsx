@@ -113,7 +113,7 @@ export function TablePage() {
         description="The same table composed into a widget: the Operational / Sustainability / Comfort switcher sits inline in the header, the building carries a muted code badge, and Connection Health colours the status label (Healthy / Degraded / Offline). Shown at Portfolio."
       >
         <div className={cn("level-portfolio", CARD)}>
-          <div className="flex items-start justify-between gap-4 p-5">
+          <div className="flex flex-col gap-3 p-5 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
             <div>
               <h3 className="font-formula text-[22px] font-medium text-fg-1">Portfolio Breakdown</h3>
               <p className="mt-1 text-[13px] text-fg-2">Portfolio Total — actual state</p>
