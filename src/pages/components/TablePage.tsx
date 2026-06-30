@@ -37,9 +37,10 @@ const BASE_ROWS = [
 const CARD = "overflow-hidden rounded-xl border border-border bg-card shadow-[var(--shadow-xs)]";
 // Base table: full-bleed header, content padded to 20px (the ECM-table look).
 const CELLS = "[&_th]:px-3 [&_td]:px-3 [&_th:first-child]:pl-5 [&_td:first-child]:pl-5 [&_th:last-child]:pr-5 [&_td:last-child]:pr-5 [&_td]:py-2.5";
-// Widget table: wrapped in px-5 so the tint header + dividers inset to the widget
-// padding; outer cells flush so columns line up with the title.
-const WIDGET_CELLS = "[&_th]:px-3 [&_td]:px-3 [&_th:first-child]:pl-0 [&_td:first-child]:pl-0 [&_th:last-child]:pr-0 [&_td:last-child]:pr-0 [&_td]:py-3.5";
+// Widget table: wrapped in px-5 pb-5 so the tint header, dividers AND bottom edge
+// inset to the widget's 20px padding. Cells keep their own px-2 padding inside,
+// so column content has breathing room within the tint bar (like the real Card).
+const WIDGET_CELLS = "[&_td]:py-3.5";
 const HEAD = "bg-muted hover:bg-muted";
 
 function HealthCell({ health }: { health: Health }) {
