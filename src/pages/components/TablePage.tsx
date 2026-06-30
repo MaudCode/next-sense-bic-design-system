@@ -40,7 +40,7 @@ const CELLS = "[&_th]:px-3 [&_td]:px-3 [&_th:first-child]:pl-5 [&_td:first-child
 // Widget table: wrapped in px-5 pb-5 so the tint header, dividers AND bottom edge
 // inset to the widget's 20px padding. Cells keep their own px-2 padding inside,
 // so column content has breathing room within the tint bar (like the real Card).
-const WIDGET_CELLS = "[&_td]:py-3.5";
+const WIDGET_CELLS = "[&_td]:py-3.5 [&_tbody_tr:last-child]:border-b";
 const HEAD = "bg-muted hover:bg-muted";
 
 function HealthCell({ health }: { health: Health }) {

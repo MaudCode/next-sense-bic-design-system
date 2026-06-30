@@ -29,12 +29,11 @@ export function Sidebar() {
           alt="Next Sense"
           className="h-5 w-auto"
         />
-        <div className="mt-1.5 text-[11px] text-fg-2">Design System</div>
       </div>
 
       {/* Section label — matches BIC's "Platform" group label */}
       <div className="px-5 pb-1 text-[12px] font-medium text-fg-2">
-        Reference
+        Design System
       </div>
 
       {/* Nav */}

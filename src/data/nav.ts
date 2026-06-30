@@ -15,7 +15,7 @@ export interface NavGroup {
 
 export const NAV: NavGroup[] = [
   {
-    title: "Getting started",
+    title: "Getting Started",
     icon: BookOpen,
     items: [{ title: "Introduction", path: "/", status: "ready" }],
   },
