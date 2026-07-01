@@ -1,5 +1,6 @@
+import type { ReactNode } from "react";
 import { Layers, ChevronDown, TrendingUp } from "lucide-react";
-import { PageHeader, Section } from "@/components/docs";
+import { EngineeringNote, PageHeader, Section } from "@/components/docs";
 import {
   Donut, ListLegend, Legend, ChartCard, topRoundedPath,
   BLUE, RED, YELLOW, INK, GRID,
@@ -193,6 +194,60 @@ function TableWidget() {
   );
 }
 
+/* ------------------------------------------------------------ widget base */
+
+function Rule({ term, children }: { term: string; children: ReactNode }) {
+  return (
+    <div className="flex gap-4 border-b border-border py-2.5 last:border-0">
+      <span className="w-32 shrink-0 text-[13px] font-medium text-fg-1">{term}</span>
+      <span className="text-[13px] leading-snug text-fg-2">{children}</span>
+    </div>
+  );
+}
+
+/** The base widget shell — the anatomy every widget shares. */
+function WidgetBase() {
+  const data = [40, 46, 38, 50];
+  const labels = ["Q1", "Q2", "Q3", "Q4"];
+  const W = 320, H = 140, padL = 24, padT = 8, padB = 20;
+  const plotH = H - padT - padB, plotW = W - padL, max = 60;
+  const ticks = [0, 30, 60];
+  const y = (v: number) => padT + plotH - (v / max) * plotH;
+  const step = plotW / data.length, bw = step * 0.5;
+  return (
+    <div className="rounded-xl border border-border bg-card p-5 shadow-[var(--shadow-xs)]">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+        <div>
+          <div className="font-formula text-[16px] font-medium leading-tight text-fg-1">Energy Usage</div>
+          <div className="mt-1 text-[14px] text-fg-2">Consumption by quarter · this year</div>
+        </div>
+        <button className="inline-flex h-8 shrink-0 items-center gap-2 self-start rounded-md border border-border bg-background px-3 text-[12px] font-medium text-fg-1">
+          <Layers size={14} className="text-fg-2" /> All floors <ChevronDown size={12} className="text-fg-3" />
+        </button>
+      </div>
+      <div className="mt-5">
+        <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-36">
+          {ticks.map((t) => (
+            <g key={t}>
+              <line x1={padL} y1={y(t)} x2={W} y2={y(t)} stroke={GRID} strokeWidth={1} />
+              <text x={padL - 6} y={y(t) + 3} textAnchor="end" fontSize="9" fill="#929083" fontFamily="var(--font-sans)">{t}</text>
+            </g>
+          ))}
+          {data.map((v, i) => {
+            const x = padL + i * step + (step - bw) / 2;
+            return (
+              <g key={i}>
+                <path d={topRoundedPath(x, y(v), bw, y(0) - y(v))} fill={YELLOW[3]} />
+                <text x={x + bw / 2} y={H - 5} textAnchor="middle" fontSize="9" fill={INK} fontFamily="var(--font-sans)">{labels[i]}</text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+    </div>
+  );
+}
+
 export function WidgetsPage() {
   return (
     <>
@@ -201,6 +256,32 @@ export function WidgetsPage() {
         title="Widgets"
         lead="A widget is a chart (or a few) plus a header, a scope control and a period, wrapped in a Card. Every chart type from the Charts page becomes a widget the same way — here's one of each, then how to handle the trickier compositions."
       />
+
+      <Section
+        title="Anatomy of a widget"
+        description="Every widget is the same shell — a Card with a title, an optional subtitle, an optional scope/period control, then the chart. Same padding and type on every card so a dashboard reads as one grid."
+      >
+        <div className="grid gap-4 lg:grid-cols-2">
+          <WidgetBase />
+          <div className="rounded-xl border border-border bg-card p-5 shadow-[var(--shadow-xs)]">
+            <Rule term="Container">Card — <span className="font-mono">rounded-xl</span>, 1px border, subtle shadow.</Rule>
+            <Rule term="Padding">20px on all sides (<span className="font-mono">p-5</span>).</Rule>
+            <Rule term="Title">H4 · 16 · PP Formula, medium.</Rule>
+            <Rule term="Subtitle">Body · 14 · Instrument Sans · muted (<span className="font-mono">--fg-2</span>).</Rule>
+            <Rule term="Scope / period">Optional control, top-right — a segmented control, dropdown or period.</Rule>
+            <Rule term="Header → body">20px gap before the chart.</Rule>
+            <Rule term="Data vs labels">Colour on the data; titles, numbers and labels stay Verdure.</Rule>
+          </div>
+        </div>
+        <div className="mt-4">
+          <EngineeringNote>
+            Padding here is the design target — <span className="font-mono">20px (p-5)</span> on
+            all sides. Shipped widgets vary (<span className="font-mono">px-4</span> /{" "}
+            <span className="font-mono">py-3</span> = 16 / 12, and the shadcn Card default is 24);
+            standardise on <span className="font-mono">p-5</span>. See Spacing → Key spacings.
+          </EngineeringNote>
+        </div>
+      </Section>
 
       <Section
         title="A widget for every chart"
