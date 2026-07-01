@@ -1,6 +1,11 @@
-import { Layers, ChevronDown } from "lucide-react";
+import { Layers, ChevronDown, TrendingUp } from "lucide-react";
 import { PageHeader, Section } from "@/components/docs";
-import { Donut, ListLegend, BLUE, RED, YELLOW } from "@/components/chart-bits";
+import {
+  Donut, ListLegend, Legend, ChartCard, topRoundedPath,
+  BLUE, RED, YELLOW, INK, GRID,
+} from "@/components/chart-bits";
+
+/* ---------------------------------------------------------------- comfort */
 
 type Band = { label: string; pct: string; value: number; color: string; muted?: boolean };
 
@@ -38,14 +43,160 @@ function Panel({ title, total, center, data }: { title: string; total: string; c
   );
 }
 
+/* ------------------------------------------------------------ widget types */
+
+/** KPI / metric card — a single headline number + a coloured delta. */
+function KpiWidget() {
+  return (
+    <ChartCard title="Total Power" sub="last 30 days">
+      <div className="font-formula text-[34px] font-medium leading-none" style={{ color: INK }}>
+        2,450 <span className="text-[15px] text-fg-2">kWh</span>
+      </div>
+      <div className="mt-2 inline-flex items-center gap-1 text-[12px]" style={{ color: "var(--success-muted-foreground)" }}>
+        <TrendingUp size={13} /> +3.2% <span className="text-fg-2">vs last period</span>
+      </div>
+    </ChartCard>
+  );
+}
+
+/** Vertical bar chart — discrete comparison, one emphasis colour. */
+function BarWidget() {
+  const data = [42, 38, 45, 40, 48, 22, 18];
+  const days = ["M", "T", "W", "T", "F", "S", "S"];
+  const W = 320, H = 150, base = H - 22, max = 52, bw = 26, step = W / data.length;
+  return (
+    <ChartCard title="Energy by Weekday" sub="kWh · average">
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-36">
+        {data.map((v, i) => {
+          const h = (v / max) * (base - 8);
+          const x = i * step + (step - bw) / 2;
+          const weekend = i >= 5;
+          return (
+            <g key={i}>
+              <path d={topRoundedPath(x, base - h, bw, h)} fill={weekend ? YELLOW[1] : YELLOW[3]} />
+              <text x={x + bw / 2} y={H - 6} textAnchor="middle" fontSize="10" fill={INK} fontFamily="var(--font-sans)">{days[i]}</text>
+            </g>
+          );
+        })}
+      </svg>
+    </ChartCard>
+  );
+}
+
+/** Line / area — a trend over time. */
+function TrendWidget() {
+  const pts = [30, 34, 31, 38, 36, 41, 39, 44, 42, 47, 45, 50];
+  const W = 320, H = 150, min = 25, max = 54, pad = 12;
+  const x = (i: number) => (i / (pts.length - 1)) * W;
+  const y = (v: number) => H - pad - ((v - min) / (max - min)) * (H - pad * 2);
+  const line = pts.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(" ");
+  const area = `${line} L${W} ${H} L0 ${H} Z`;
+  return (
+    <ChartCard title="Energy Trend" sub="last 12 weeks">
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="w-full h-36">
+        <defs>
+          <linearGradient id="wtrend" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={BLUE[2]} stopOpacity="0.35" />
+            <stop offset="100%" stopColor={BLUE[2]} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path d={area} fill="url(#wtrend)" />
+        <path d={line} fill="none" stroke={BLUE[3]} strokeWidth={2} vectorEffect="non-scaling-stroke" />
+      </svg>
+    </ChartCard>
+  );
+}
+
+/** Donut / pie — a share of a whole. */
+function DonutWidget() {
+  const slices = [
+    { value: 45, color: BLUE[3] },
+    { value: 30, color: YELLOW[3] },
+    { value: 25, color: RED[2] },
+  ];
+  return (
+    <ChartCard title="Energy by Source" sub="this month">
+      <div className="flex items-center gap-4">
+        <Donut slices={slices} total="45" unit="%" centerLabel="Electricity" size={128} />
+        <Legend items={[
+          { label: "Electricity", color: BLUE[3] },
+          { label: "Gas", color: YELLOW[3] },
+          { label: "Cooling", color: RED[2] },
+        ]} />
+      </div>
+    </ChartCard>
+  );
+}
+
+/** Horizontal bar — ranked rows; colour on the bar, value in Verdure. */
+function HBarWidget() {
+  const rows = [
+    { label: "Meeting Rm A", pct: 82 },
+    { label: "Open Floor 3", pct: 64 },
+    { label: "Focus Pods", pct: 47 },
+    { label: "Café", pct: 33 },
+  ];
+  return (
+    <ChartCard title="Room Usage" sub="occupancy this week">
+      <div className="space-y-2.5">
+        {rows.map((r) => (
+          <div key={r.label} className="flex items-center gap-3 text-[12px]">
+            <span className="w-24 shrink-0 truncate text-fg-1">{r.label}</span>
+            <span className="relative h-3 flex-1 rounded-sm" style={{ background: GRID }}>
+              <span className="absolute inset-y-0 left-0 rounded-sm" style={{ width: `${r.pct}%`, background: BLUE[3] }} />
+            </span>
+            <span className="w-8 shrink-0 text-right font-mono tabular-nums text-fg-1">{r.pct}%</span>
+          </div>
+        ))}
+      </div>
+    </ChartCard>
+  );
+}
+
+/** Table — a compact ranked list. */
+function TableWidget() {
+  const rows = [
+    { b: "Riverside Mews", v: "58,000" },
+    { b: "Westgate 4", v: "31,000" },
+    { b: "Maple Court 12", v: "22,000" },
+    { b: "Harbour Point", v: "14,000" },
+  ];
+  return (
+    <ChartCard title="Top Savings" sub="by potential · kWh">
+      <div className="divide-y divide-border">
+        {rows.map((r) => (
+          <div key={r.b} className="flex items-center justify-between py-2 text-[13px]">
+            <span className="text-fg-1">{r.b}</span>
+            <span className="font-mono tabular-nums text-fg-1">{r.v} <span className="text-fg-2">kWh</span></span>
+          </div>
+        ))}
+      </div>
+    </ChartCard>
+  );
+}
+
 export function WidgetsPage() {
   return (
     <>
       <PageHeader
         eyebrow="Patterns"
         title="Widgets"
-        lead="How charts are composed into the cards you see on a page. A widget is a chart (or a few) plus a header, a scope control, and a period — wrapped in a Card. This page shows how to handle the trickier compositions."
+        lead="A widget is a chart (or a few) plus a header, a scope control and a period, wrapped in a Card. Every chart type from the Charts page becomes a widget the same way — here's one of each, then how to handle the trickier compositions."
       />
+
+      <Section
+        title="A widget for every chart"
+        description="The building blocks you'll drop onto a dashboard: a metric, a bar, a trend, a donut, a ranked bar and a compact table. Each is a Card with a title + period, then the chart — coloured data, Verdure labels and numbers."
+      >
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <KpiWidget />
+          <BarWidget />
+          <TrendWidget />
+          <DonutWidget />
+          <HBarWidget />
+          <TableWidget />
+        </div>
+      </Section>
 
       <Section
         title="Multiple charts in one widget"
@@ -53,12 +204,12 @@ export function WidgetsPage() {
       >
         <div className="rounded-xl border border-border bg-card p-5 shadow-[var(--shadow-xs)]">
           {/* shared header */}
-          <div className="flex items-start justify-between gap-4 mb-5">
+          <div className="flex flex-col gap-3 mb-5 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
             <div>
               <div className="font-formula text-[17px] font-medium text-fg-1">Time in Comfort Categories</div>
               <div className="text-[12px] text-fg-2 mt-1">Share of time across the selected period · business hours</div>
             </div>
-            <button className="inline-flex items-center gap-2 h-8 px-3 rounded-md border border-border bg-background text-[12px] font-medium text-fg-1 shrink-0">
+            <button className="inline-flex items-center gap-2 h-8 px-3 rounded-md border border-border bg-background text-[12px] font-medium text-fg-1 shrink-0 self-start">
               <Layers size={14} className="text-fg-2" /> All floors <ChevronDown size={12} className="text-fg-3" />
             </button>
           </div>
