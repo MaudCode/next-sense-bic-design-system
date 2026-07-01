@@ -59,22 +59,32 @@ function KpiWidget() {
   );
 }
 
-/** Vertical bar chart — discrete comparison, one emphasis colour. */
+/** Vertical bar chart — discrete comparison, one emphasis colour.
+    Cartesian grid + Y/X axes, like the recharts widgets in BIC. */
 function BarWidget() {
   const data = [42, 38, 45, 40, 48, 22, 18];
   const days = ["M", "T", "W", "T", "F", "S", "S"];
-  const W = 320, H = 150, base = H - 22, max = 52, bw = 26, step = W / data.length;
+  const W = 340, H = 168, padL = 26, padT = 8, padB = 22;
+  const plotH = H - padT - padB, plotW = W - padL, max = 60;
+  const ticks = [0, 20, 40, 60];
+  const y = (v: number) => padT + plotH - (v / max) * plotH;
+  const step = plotW / data.length, bw = step * 0.5;
   return (
     <ChartCard title="Energy by Weekday" sub="kWh · average">
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-36">
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-40">
+        {ticks.map((t) => (
+          <g key={t}>
+            <line x1={padL} y1={y(t)} x2={W} y2={y(t)} stroke={GRID} strokeWidth={1} />
+            <text x={padL - 6} y={y(t) + 3} textAnchor="end" fontSize="9" fill="#929083" fontFamily="var(--font-sans)">{t}</text>
+          </g>
+        ))}
         {data.map((v, i) => {
-          const h = (v / max) * (base - 8);
-          const x = i * step + (step - bw) / 2;
+          const x = padL + i * step + (step - bw) / 2;
           const weekend = i >= 5;
           return (
             <g key={i}>
-              <path d={topRoundedPath(x, base - h, bw, h)} fill={weekend ? YELLOW[1] : YELLOW[3]} />
-              <text x={x + bw / 2} y={H - 6} textAnchor="middle" fontSize="10" fill={INK} fontFamily="var(--font-sans)">{days[i]}</text>
+              <path d={topRoundedPath(x, y(v), bw, y(0) - y(v))} fill={weekend ? YELLOW[1] : YELLOW[3]} />
+              <text x={x + bw / 2} y={H - 6} textAnchor="middle" fontSize="9" fill={INK} fontFamily="var(--font-sans)">{days[i]}</text>
             </g>
           );
         })}
@@ -83,23 +93,31 @@ function BarWidget() {
   );
 }
 
-/** Line / area — a trend over time. */
+/** Line / area — a trend over time. Cartesian grid + Y/X axes. */
 function TrendWidget() {
   const pts = [30, 34, 31, 38, 36, 41, 39, 44, 42, 47, 45, 50];
-  const W = 320, H = 150, min = 25, max = 54, pad = 12;
-  const x = (i: number) => (i / (pts.length - 1)) * W;
-  const y = (v: number) => H - pad - ((v - min) / (max - min)) * (H - pad * 2);
+  const W = 340, H = 168, padL = 26, padT = 8, padB = 18;
+  const plotH = H - padT - padB, plotW = W - padL, min = 20, max = 60;
+  const ticks = [20, 40, 60];
+  const x = (i: number) => padL + (i / (pts.length - 1)) * plotW;
+  const y = (v: number) => padT + plotH - ((v - min) / (max - min)) * plotH;
   const line = pts.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(" ");
-  const area = `${line} L${W} ${H} L0 ${H} Z`;
+  const area = `${line} L${x(pts.length - 1).toFixed(1)} ${padT + plotH} L${x(0).toFixed(1)} ${padT + plotH} Z`;
   return (
-    <ChartCard title="Energy Trend" sub="last 12 weeks">
-      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="w-full h-36">
+    <ChartCard title="Energy Trend" sub="kWh · last 12 weeks">
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-40">
         <defs>
           <linearGradient id="wtrend" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor={BLUE[2]} stopOpacity="0.35" />
             <stop offset="100%" stopColor={BLUE[2]} stopOpacity="0" />
           </linearGradient>
         </defs>
+        {ticks.map((t) => (
+          <g key={t}>
+            <line x1={padL} y1={y(t)} x2={W} y2={y(t)} stroke={GRID} strokeWidth={1} />
+            <text x={padL - 6} y={y(t) + 3} textAnchor="end" fontSize="9" fill="#929083" fontFamily="var(--font-sans)">{t}</text>
+          </g>
+        ))}
         <path d={area} fill="url(#wtrend)" />
         <path d={line} fill="none" stroke={BLUE[3]} strokeWidth={2} vectorEffect="non-scaling-stroke" />
       </svg>

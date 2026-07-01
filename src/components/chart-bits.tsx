@@ -19,10 +19,10 @@ export function ChartCard({
   className?: string;
 }) {
   return (
-    <div className={`rounded-xl border border-border bg-card p-5 shadow-[var(--shadow-xs)] ${className}`}>
-      <div className="font-formula text-[15px] font-medium text-fg-1 leading-none">{title}</div>
-      {sub && <div className="text-[11px] text-fg-2 mt-1.5">{sub}</div>}
-      <div className="mt-4">{children}</div>
+    <div className={`rounded-xl border border-border bg-card p-6 shadow-[var(--shadow-xs)] ${className}`}>
+      <div className="font-formula text-[15px] font-medium text-fg-1 leading-tight">{title}</div>
+      {sub && <div className="text-[13px] text-fg-2 mt-1">{sub}</div>}
+      <div className="mt-5">{children}</div>
     </div>
   );
 }
